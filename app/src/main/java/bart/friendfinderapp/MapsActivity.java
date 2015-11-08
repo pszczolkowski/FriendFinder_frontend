@@ -47,12 +47,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // NA SZTYWNO DO TESTÓW
-//        LatLng lodz = new LatLng(51.758648, 19.454815);
-//        mMap.addMarker(new MarkerOptions().position(lodz).title("This is my first marker"));
-//        mMap.moveCamera( CameraUpdateFactory.newLatLng( lodz ));
-
-
+        mMap.setMyLocationEnabled( true );
 
     }
 
