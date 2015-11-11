@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Criteria;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +20,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    MyCurrentLoctionListener locationListener = new MyCurrentLoctionListener();
+    MyCurrentLocationListener locationListener;
+    private LocationManager locationManager;
 
 
     @Override
@@ -28,9 +30,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        locationManager = (LocationManager) getSystemService( LOCATION_SERVICE );
+        mapFragment.getMapAsync( this );
 
-        getPositionFromGPS(locationListener);
+
         inputYourName();
 
     }
@@ -47,12 +50,16 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        locationListener = new MyCurrentLocationListener( mMap );
+        getPositionFromGPS( locationListener );
+        mMap.setOnMyLocationChangeListener( locationListener );
         mMap.setMyLocationEnabled( true );
 
     }
 
     // OBSLUGA GPS
-    public void getPositionFromGPS(MyCurrentLoctionListener locationListener)
+    public void getPositionFromGPS(MyCurrentLocationListener locationListener)
     {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -62,7 +69,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             showGPSDisabledAlertToUser();
         }
         try {
-            locationManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, locationListener );
+            Criteria criteria = new Criteria( );
+            String provider = locationManager.getBestProvider( criteria, true );
+            locationManager.requestLocationUpdates( provider, 1000, 0, locationListener );
         }catch (SecurityException missingPermission){
             warningDialog();
         }
