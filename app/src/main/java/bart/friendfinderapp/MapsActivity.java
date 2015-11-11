@@ -34,7 +34,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         mapFragment.getMapAsync( this );
 
 
-        inputYourName();
+//        inputYourName();
 
     }
 
