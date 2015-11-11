@@ -55,6 +55,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         getPositionFromGPS( locationListener );
         mMap.setOnMyLocationChangeListener( locationListener );
         mMap.setMyLocationEnabled( true );
+        mMap.getUiSettings().setZoomControlsEnabled(true);
 
     }
 
