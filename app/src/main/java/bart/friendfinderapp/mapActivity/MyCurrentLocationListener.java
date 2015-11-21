@@ -1,4 +1,4 @@
-package bart.friendfinderapp;
+package bart.friendfinderapp.mapActivity;
 
 import android.location.Location;
 import android.location.LocationListener;

@@ -1,4 +1,4 @@
-package bart.friendfinderapp;
+package bart.friendfinderapp.mapActivity;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -17,6 +17,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
+import bart.friendfinderapp.LocalUser;
+import bart.friendfinderapp.R;
+
 public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -27,7 +30,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView( R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         locationManager = (LocationManager) getSystemService( LOCATION_SERVICE );
