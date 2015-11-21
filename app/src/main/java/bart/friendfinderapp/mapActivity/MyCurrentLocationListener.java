@@ -59,9 +59,6 @@ public class MyCurrentLocationListener implements GoogleMap.OnMyLocationChangeLi
         lastLatitude = location.getLatitude();
         lastLongitude = location.getLongitude();
 
-        String myLocation = "Latitude = " + location.getLatitude() + " Longitude = " + location.getLongitude();
-        Log.e( "MY CURRENT LOCATION", myLocation );
-
         map.moveCamera( CameraUpdateFactory.newLatLng( new LatLng( lastLatitude, lastLongitude ) ) );
         map.animateCamera( CameraUpdateFactory.zoomTo( 17 ) );
 
