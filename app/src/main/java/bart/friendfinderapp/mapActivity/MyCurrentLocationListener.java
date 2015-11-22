@@ -15,8 +15,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class MyCurrentLocationListener implements GoogleMap.OnMyLocationChangeListener , LocationListener{
 
     private final GoogleMap map;
-    double lastLatitude;
-    double lastLongitude;
+    Double lastLatitude;
+    Double lastLongitude;
 
     public MyCurrentLocationListener( GoogleMap map ) {
         this.map = map;
@@ -31,12 +31,11 @@ public class MyCurrentLocationListener implements GoogleMap.OnMyLocationChangeLi
         Log.e( "MY CURRENT LOCATION", myLocation );
     }
 
-    public double getLatitude( Location location ) {
-        return lastLatitude = location.getLatitude();
-    }
-
-    public double getLongitude( Location location ) {
-        return lastLongitude = location.getLongitude();
+    public Localization getUserLocalization(){
+        if( lastLatitude != null && lastLongitude != null){
+            return new Localization( lastLatitude, lastLongitude );
+        }
+        return null;
     }
 
     @Override
