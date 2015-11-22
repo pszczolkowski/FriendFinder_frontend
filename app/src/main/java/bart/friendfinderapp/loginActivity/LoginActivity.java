@@ -272,7 +272,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
     }
 
     private void saveDataToFile() {
-        System.out.println( "KAKA " + have_an_account + " " + remember_me + " " + auto_login );
         try {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put( "have_an_account", have_an_account );
@@ -322,8 +321,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             have_an_account = jsonObject.optBoolean( "have_an_account" );
             remember_me = jsonObject.optBoolean( "remember_me" );
             auto_login = jsonObject.optBoolean( "auto_login" );
-
-            System.out.println( "KUKU " + have_an_account + " " + remember_me + " " + auto_login );
 
             if ( remember_me ) {
                 String login = jsonObject.optString( "login" );
