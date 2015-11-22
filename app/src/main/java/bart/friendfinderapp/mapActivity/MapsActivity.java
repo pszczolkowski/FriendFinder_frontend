@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
@@ -25,21 +24,36 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     private GoogleMap mMap;
     MyCurrentLocationListener locationListener;
     private LocationManager locationManager;
+    private Thread updateMyLocalizationThread;
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView( R.layout.activity_maps);
+    protected void onCreate( Bundle savedInstanceState ) {
+        super.onCreate( savedInstanceState );
+        setContentView( R.layout.activity_maps );
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById( R.id.map );
         locationManager = (LocationManager) getSystemService( LOCATION_SERVICE );
         mapFragment.getMapAsync( this );
 
-
-//        inputYourName();
-
+        runUpdateMyLocalizationThread();
     }
+
+    private void runUpdateMyLocalizationThread() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while ( locationListener == null ) {
+                    Thread.yield();
+                }
+                Thread updateMyPositionThread = new MyPositionUpdateThread( locationListener );
+                updateMyPositionThread.start();
+            }
+        };
+        Thread thread = new Thread( runnable );
+        thread.start();
+    }
+
 
     /**
      * Manipulates the map once available.
@@ -51,32 +65,31 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady( GoogleMap googleMap ) {
         mMap = googleMap;
 
         locationListener = new MyCurrentLocationListener( mMap );
         getPositionFromGPS( locationListener );
         mMap.setOnMyLocationChangeListener( locationListener );
         mMap.setMyLocationEnabled( true );
-        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled( true );
 
     }
 
     // OBSLUGA GPS
-    public void getPositionFromGPS(MyCurrentLocationListener locationListener)
-    {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+    public void getPositionFromGPS( MyCurrentLocationListener locationListener ) {
+        LocationManager locationManager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Toast.makeText(this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT).show();
+        if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            Toast.makeText( this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT ).show();
         } else {
             showGPSDisabledAlertToUser();
         }
         try {
-            Criteria criteria = new Criteria( );
+            Criteria criteria = new Criteria();
             String provider = locationManager.getBestProvider( criteria, true );
             locationManager.requestLocationUpdates( provider, 1000, 0, locationListener );
-        }catch (SecurityException missingPermission){
+        } catch ( SecurityException missingPermission ) {
             warningDialog();
         }
     }
@@ -96,10 +109,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     }
 
     // WYMUSZENIE NA UZYTKOWNIKU WLACZENIA GPSA W URZADZENIU
-    private void showGPSDisabledAlertToUser(){
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
-                .setCancelable(false)
+    private void showGPSDisabledAlertToUser() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( this );
+        alertDialogBuilder.setMessage( "GPS is disabled in your device. Would you like to enable it?" )
+                .setCancelable( false )
                 .setPositiveButton( "Goto Settings Page To Enable GPS",
                         new DialogInterface.OnClickListener() {
                             public void onClick( DialogInterface dialog, int id ) {
@@ -117,50 +130,18 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         alert.show();
     }
 
-    // INPUT YOUR NAME
-    public void inputYourName(){
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle("Enter your name:");
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(this);
-        alert.setView(input);
-
-        //BUTTON OK
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-
-                String inputName = input.getText().toString();
-                createLocalUser(inputName);
-
-                return;
-            }
-        });
-
-        /*alert.setNegativeButton("Login as guest.", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int which) {
-
-                return;
-            }
-        });*/
-        alert.show();
-    }
-
     //TWORZENIE LOCAL USERA
-    public void createLocalUser(String inputName){
+    public void createLocalUser( String inputName ) {
 
-        LocalUser user = new LocalUser(inputName);
+        LocalUser user = new LocalUser( inputName );
     }
 
     // MENU
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu( Menu menu ) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu, (android.view.Menu) menu);
+        menuInflater.inflate( R.menu.menu, (android.view.Menu) menu );
         return true;
     }
-
 
 
 }
