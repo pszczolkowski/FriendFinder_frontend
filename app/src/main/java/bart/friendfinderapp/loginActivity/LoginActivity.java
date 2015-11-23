@@ -323,11 +323,13 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             auto_login = jsonObject.optBoolean( "auto_login" );
 
             if ( remember_me ) {
-                String login = jsonObject.optString( "login" );
-                String token = jsonObject.optString( "token" );
-                String expiration = jsonObject.optString( "expiration" );
-                createUserCredentials( login, token, expiration );
-                userCredentials = getUserCredentials();
+                String login = jsonObject.optString( "login" ).trim();
+                String token = jsonObject.optString( "token" ).trim();
+                String expiration = jsonObject.optString( "expiration" ).trim();
+                if ( !login.isEmpty() && !token.isEmpty() && !expiration.isEmpty() ) {
+                    createUserCredentials( login, token, expiration );
+                    userCredentials = getUserCredentials();
+                }
             }
             success = true;
         } catch ( FileNotFoundException e ) {
