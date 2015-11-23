@@ -526,8 +526,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
                 loginView.setError( getString( R.string.error_invalid_login ) );
                 loginPasswordView.setError( getString( R.string.error_incorrect_password ) );
                 loginPasswordView.requestFocus();
-            } else {
+            } else if ( responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR ) {
                 createShortToast( getString( R.string.internal_server_error ) );
+            } else {
+                createShortToast( "Unknown error - check internet connection");
             }
         }
 
