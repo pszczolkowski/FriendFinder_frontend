@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/my_location"
-        android:title="My location"/>
+        android:id="@+id/changemap"
+        android:title="Change map type"/>
+
     <item
         android:id="@+id/friends"
         android:title="Friends"/>
@@ -17,4 +18,8 @@
     <item
         android:id="@+id/showhide"
         android:title="Show/Hide"/>
+
+    <item
+        android:id="@+id/logout"
+        android:title="Logout me"/>
 </menu>

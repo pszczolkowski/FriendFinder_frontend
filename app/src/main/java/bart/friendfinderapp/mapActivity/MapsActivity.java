@@ -10,14 +10,19 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
-import bart.friendfinderapp.LocalUser;
+import java.io.File;
+
 import bart.friendfinderapp.R;
+import bart.friendfinderapp.loginActivity.LoginActivity;
+
+import static bart.friendfinderapp.shared.Constants.LOGIN_FILE;
 
 public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
@@ -26,6 +31,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     private LocationManager locationManager;
     private Thread updateMyLocalizationThread;
 
+    boolean switchMap = true;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -34,7 +40,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById( R.id.map );
         locationManager = (LocationManager) getSystemService( LOCATION_SERVICE );
+
         mapFragment.getMapAsync( this );
+
+
 
         runUpdateMyLocalizationThread();
     }
@@ -70,9 +79,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         locationListener = new MyCurrentLocationListener( mMap );
         getPositionFromGPS( locationListener );
-        mMap.setOnMyLocationChangeListener( locationListener );
-        mMap.setMyLocationEnabled( true );
-        mMap.getUiSettings().setZoomControlsEnabled( true );
+        mMap.setOnMyLocationChangeListener(locationListener);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
     }
 
@@ -98,12 +108,12 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( this );
         alertDialogBuilder
                 .setMessage( "You didn't accept sharing your gps location and without it app is useless." )
-                .setNegativeButton( "Ok",
+                .setNegativeButton("Ok",
                         new DialogInterface.OnClickListener() {
-                            public void onClick( DialogInterface dialog, int id ) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
-                        } );
+                        });
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
@@ -120,28 +130,84 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                                 startActivity( callGPSSettingIntent );
                             }
                         } );
-        alertDialogBuilder.setNegativeButton( "Cancel",
+        alertDialogBuilder.setNegativeButton("Cancel",
                 new DialogInterface.OnClickListener() {
-                    public void onClick( DialogInterface dialog, int id ) {
+                    public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
-                } );
+                });
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
 
-    //TWORZENIE LOCAL USERA
-    public void createLocalUser( String inputName ) {
+    private void switchMapType() {
 
-        LocalUser user = new LocalUser( inputName );
+        if(switchMap){
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            switchMap=false;
+        }
+        else{
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            switchMap=true;
+        }
+
     }
+
 
     // MENU
     public boolean onCreateOptionsMenu( Menu menu ) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate( R.menu.menu, (android.view.Menu) menu );
+        menuInflater.inflate(R.menu.menu, (android.view.Menu) menu);
+
         return true;
     }
+
+    // Button click
+    @Override
+    public boolean onOptionsItemSelected( MenuItem item ) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if ( id == R.id.changemap ) {
+
+            switchMapType();
+
+            return true;
+        }
+
+        if ( id == R.id.friends ) {
+            return true;
+        }
+
+        if ( id == R.id.options ) {
+            return true;
+        }
+
+        if ( id == R.id.add ) {
+            return true;
+        }
+
+        if ( id == R.id.showhide ) {
+            return true;
+        }
+
+        if ( id == R.id.logout ) {
+
+            //trying to delete file with user settings
+            new File( LOGIN_FILE ).delete();
+
+            Intent i = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(i);
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected( item );
+    }
+
+
 
 
 }
