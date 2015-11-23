@@ -1,5 +1,7 @@
 package bart.friendfinderapp.loginActivity;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,11 +60,13 @@ public class LoginController {
 
             //check server response - 200 if OK, 400 if requested values were incorrect, and 500 if there was some problems with server
             responseCode = connection.getResponseCode();
+            String responseAsString = readResponseBody();
             if ( responseCode == HttpURLConnection.HTTP_OK ) {
-                String responseAsString = readResponseBody();
                 createUserCredentialsFromResponse( responseAsString );
+            }else{
+                Log.i("Response error body", responseAsString);
             }
-
+            Log.i("Server response", responseCode + " " + connection.getResponseMessage());
 
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
