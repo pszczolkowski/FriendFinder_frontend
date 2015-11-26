@@ -52,7 +52,7 @@ public class FriendsListController {
                 String responseMessage = readResponseBody();
                 JSONArray responseAsJson = new JSONArray( responseMessage );
                 List< User > friends = castResponseToList( responseAsJson );
-                FriendsList.updateUserFriendsList( friends );
+                FriendsList.updateUserFriends( friends );
             } else if ( responseCode != HttpURLConnection.HTTP_OK) {
                 logErrorMessage();
             }

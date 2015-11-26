@@ -17,7 +17,7 @@ public class FriendsList {
         return new ArrayList<>( userFriends.values() );
     }
 
-    public static void updateUserFriendsList( List< User > updatedList ) {
+    public static void updateUserFriends( List< User > updatedList ) {
         for ( User friend : updatedList ) {
             if ( !userFriends.containsKey( friend.getId() ) ) {
                 userFriends.put( friend.getId(), friend );
