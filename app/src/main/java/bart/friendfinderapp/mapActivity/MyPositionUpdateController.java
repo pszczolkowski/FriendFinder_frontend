@@ -1,9 +1,13 @@
 package bart.friendfinderapp.mapActivity;
 
+import android.util.Log;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -51,7 +55,9 @@ public class MyPositionUpdateController {
                 connection.connect();
                 //Check the response code of request
                 responseCode = connection.getResponseCode();
-                System.out.println( "KUKU " + responseCode );
+                if ( responseCode != HttpURLConnection.HTTP_OK ) {
+                    logErrorMessage();
+                }
             } catch ( MalformedURLException e ) {
                 e.printStackTrace();
             } catch ( IOException e ) {
@@ -63,5 +69,17 @@ public class MyPositionUpdateController {
             }
         }
         return responseCode;
+    }
+
+    private static void logErrorMessage() throws IOException {
+        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+
+        while ( ( line = bufferedReader.readLine() ) != null ) {
+            stringBuilder.append( line );
+        }
+        bufferedReader.close();
+        Log.i( "Server error message", stringBuilder.toString() );
     }
 }
