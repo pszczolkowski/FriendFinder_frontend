@@ -91,7 +91,7 @@ public class FriendsPositionController {
         if ( responseAsJsonArray != null ) {
             for ( int i = 0; i < responseAsJsonArray.length(); i++ ) {
                 JSONObject singleRecord = responseAsJsonArray.getJSONObject( i );
-                friendsLocalizations.put( singleRecord.getString( "friendid" ), new Localization( singleRecord.getDouble( "longitude" ), singleRecord.getDouble( "latitude" ) ) );
+                friendsLocalizations.put( singleRecord.getString( "FriendId" ), new Localization( singleRecord.getDouble( "Longitude" ), singleRecord.getDouble( "Latitude" ) ) );
             }
         }
         return friendsLocalizations;
