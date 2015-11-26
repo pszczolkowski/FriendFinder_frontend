@@ -34,10 +34,18 @@ public class User {
         return id;
     }
 
+    /**
+     * method to change if the user is displayed on map as a marker or not
+     * @param isShowed
+     */
     public void changeIsUserShownOnMap( boolean isShowed ) {
         this.isUserShownOnMap = isShowed;
     }
 
+    /**
+     * method to update User localizationData
+     * @param localization
+     */
     public void setUserLocalization( Localization localization ) {
         this.userLocalization = localization;
     }
@@ -46,6 +54,11 @@ public class User {
         return userLocalization;
     }
 
+    /**
+     * User id is unique identifier of user so equal method should compare only this field
+     * @param o
+     * @return
+     */
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;
