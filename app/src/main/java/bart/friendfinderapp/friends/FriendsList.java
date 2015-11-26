@@ -13,8 +13,8 @@ public class FriendsList {
 
     private static Map< String, User > userFriends = new HashMap<>();
 
-    public static Map<String, User> getUserFriends(){
-        return userFriends;
+    public static List<User> getUserFriends(){
+        return new ArrayList<>( userFriends.values() );
     }
 
     public static void updateUserFriendsList( List< User > updatedList ) {
