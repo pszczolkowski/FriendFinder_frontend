@@ -12,7 +12,7 @@ import bart.friendfinderapp.mapActivity.Localization;
  * This class stores information about user friends
  * TODO save this class and User class to file in memory to store information about showing or hiding friends
  */
-public class FriendsList {
+public class UserFriends {
 
     private static Map< String, User > userFriends = new HashMap<>();
 

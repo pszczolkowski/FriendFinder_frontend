@@ -12,43 +12,48 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import bart.friendfinderapp.mapActivity.Localization;
+import bart.friendfinderapp.shared.Constants;
 
-import static bart.friendfinderapp.shared.Constants.APP_URL;
 import static bart.friendfinderapp.shared.Constants.GLOBAL_TIMEOUT;
 import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
 
 /**
  * Created by Godzio on 2015-11-26.
  */
-public class FriendsPositionController {
+public class UpdateUserFriendsController {
+
     private static HttpURLConnection connection;
     private static URL url;
 
     public static int sendRequest() {
         int responseCode = 0;
+
         try {
-            url = new URL( APP_URL + "/user/location" );
+            url = new URL( Constants.APP_URL + "/user/friend" );
             connection = (HttpURLConnection) url.openConnection();
+
             connection.setRequestMethod( "GET" );
             connection.setUseCaches( false );
+
             connection.setRequestProperty( "Accept", "application/json" );
             connection.setRequestProperty( "Authorization", "Bearer " + getUserCredentials().getToken() );
+
             connection.setConnectTimeout( GLOBAL_TIMEOUT );
             connection.setReadTimeout( GLOBAL_TIMEOUT );
 
             connection.connect();
 
             responseCode = connection.getResponseCode();
+
             if ( responseCode == HttpURLConnection.HTTP_OK ) {
-                String responseAsString = readResponseBody();
-                JSONArray responseAsJson = new JSONArray( responseAsString );
-                Map< String, Localization > friendLocalizations = convertResponseToMap( responseAsJson );
-                FriendsList.updateFriendsLocalizations( friendLocalizations );
-            } else if ( responseCode != HttpURLConnection.HTTP_OK ) {
+                String responseMessage = readResponseBody();
+                JSONArray responseAsJson = new JSONArray( responseMessage );
+                List< User > friends = castResponseToList( responseAsJson );
+                UserFriends.updateUserFriends( friends );
+            } else if ( responseCode != HttpURLConnection.HTTP_OK) {
                 logErrorMessage();
             }
         } catch ( MalformedURLException e ) {
@@ -58,6 +63,8 @@ public class FriendsPositionController {
         } catch ( JSONException e ) {
             e.printStackTrace();
         }
+
+
         return responseCode;
     }
 
@@ -86,14 +93,15 @@ public class FriendsPositionController {
         Log.i( "Server error message", stringBuilder.toString() );
     }
 
-    private static Map< String, Localization > convertResponseToMap( JSONArray responseAsJsonArray ) throws JSONException {
-        Map< String, Localization > friendsLocalizations = new HashMap<>();
-        if ( responseAsJsonArray != null ) {
-            for ( int i = 0; i < responseAsJsonArray.length(); i++ ) {
-                JSONObject singleRecord = responseAsJsonArray.getJSONObject( i );
-                friendsLocalizations.put( singleRecord.getString( "FriendId" ), new Localization( singleRecord.getDouble( "Longitude" ), singleRecord.getDouble( "Latitude" ) ) );
+    private static List< User > castResponseToList( JSONArray responseAsJson ) throws JSONException {
+        List< User > users = new ArrayList<>();
+        if ( responseAsJson != null ) {
+            for ( int i = 0; i < responseAsJson.length(); i++ ) {
+                JSONObject singleArrayRecord = responseAsJson.getJSONObject( i );
+                users.add( new User( singleArrayRecord.getString( "FriendId" ), singleArrayRecord.getString( "FriendUserName" ) ) );
             }
         }
-        return friendsLocalizations;
+
+        return users;
     }
 }
