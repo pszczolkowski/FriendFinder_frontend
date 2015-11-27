@@ -7,6 +7,8 @@ import java.util.Map;
 
 import bart.friendfinderapp.mapActivity.Localization;
 
+import static bart.friendfinderapp.friends.UpdateUserFriendsController.sendRequest;
+
 /**
  * Created by Godzio on 2015-11-26.
  * This class stores information about user friends
@@ -18,14 +20,16 @@ public class UserFriends {
 
     /**
      * Method to get User Friends as List
+     *
      * @return
      */
-    public static List<User> getUserFriends(){
+    public static List< User > getUserFriends() {
         return new ArrayList<>( userFriends.values() );
     }
 
     /**
      * Method to update userFriends. For every User on list we check if map with userFriends contains key with value of UserId, if not we add new Friend.
+     *
      * @param updatedList
      */
     public static void updateUserFriends( List< User > updatedList ) {
@@ -39,6 +43,7 @@ public class UserFriends {
     /**
      * Method to update localization informations of userFriends. For every key (UserId) in map with localization, we check if map with userFriends contains such User.
      * If user was found on userFriendsMap method update it's Localization data.
+     *
      * @param friendLocalizations
      */
     public static void updateFriendsLocalizations( Map< String, Localization > friendLocalizations ) {
@@ -47,5 +52,15 @@ public class UserFriends {
                 userFriends.get( friendId ).setUserLocalization( friendLocalizations.get( friendId ) );
             }
         }
+    }
+
+    public static void requestUpdateOfUserFriends() {
+        Thread thread = new Thread( new Runnable() {
+            @Override
+            public void run() {
+                sendRequest();
+            }
+        } );
+        thread.start();
     }
 }
