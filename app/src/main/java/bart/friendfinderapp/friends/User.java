@@ -36,14 +36,18 @@ public class User {
 
     /**
      * method to change if the user is displayed on map as a marker or not
-     * @param isShowed
      */
-    public void changeIsUserShownOnMap( boolean isShowed ) {
-        this.isUserShownOnMap = isShowed;
+    public void changeIsUserShownOnMap() {
+        isUserShownOnMap = !isUserShownOnMap;
+    }
+
+    public boolean isUserShownOnMap() {
+        return isUserShownOnMap;
     }
 
     /**
      * method to update User localizationData
+     *
      * @param localization
      */
     public void setUserLocalization( Localization localization ) {
@@ -56,6 +60,7 @@ public class User {
 
     /**
      * User id is unique identifier of user so equal method should compare only this field
+     *
      * @param o
      * @return
      */
