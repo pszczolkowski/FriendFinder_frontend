@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Criteria;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -16,13 +17,21 @@ import android.widget.Toast;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import bart.friendfinderapp.R;
+import bart.friendfinderapp.friends.User;
 import bart.friendfinderapp.friends.UserFriendsActivity;
 import bart.friendfinderapp.loginActivity.LoginActivity;
 
+import static bart.friendfinderapp.friends.UserFriends.getUserFriends;
 import static bart.friendfinderapp.friends.UserFriends.mockFriends;
 import static bart.friendfinderapp.shared.Constants.LOGIN_FILE;
 
@@ -34,6 +43,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     private Thread updateMyLocalizationThread;
 
     boolean switchMap = true;
+    private final Map< String, Marker > friendMarkers = new HashMap<>();
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -55,22 +65,6 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         runUpdateMyLocalizationThread();
     }
 
-    private void runUpdateMyLocalizationThread() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                while ( locationListener == null ) {
-                    Thread.yield();
-                }
-                Thread updateMyPositionThread = new MyPositionUpdateThread( locationListener );
-                updateMyPositionThread.start();
-            }
-        };
-        Thread thread = new Thread( runnable );
-        thread.start();
-    }
-
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -90,7 +84,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(true);
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-
+        showFriends();
     }
 
     // OBSLUGA GPS
@@ -145,6 +139,54 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                 });
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
+    }
+
+    private void startCheckingForFriendsPositionsChanges() {
+        
+    }
+
+    private void showFriends() {
+        List< User > friends = getUserFriends();
+        for ( User friend : friends ) {
+            if ( friend.isUserShownOnMap() ) {
+                Location userLocation = new Location( "user" );
+                String distance = "unknown";
+                if ( locationListener != null && locationListener.getUserLocalization() != null ) {
+                    Localization userLocalization = locationListener.getUserLocalization();
+                    userLocation.setLongitude( userLocalization.getLongitude() );
+                    userLocation.setLatitude( userLocalization.getLatitude() );
+
+                    Location friendLocation = new Location( "friend" );
+                    friendLocation.setLatitude( friend.getUserLocalization().getLatitude() );
+                    friendLocation.setLongitude( friend.getUserLocalization().getLongitude() );
+                    distance = String.valueOf( friendLocation.distanceTo( userLocation ) );
+                }
+                Marker friendMarker = mMap.addMarker(
+                        new MarkerOptions()
+                                .position( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) )
+                                .title( friend.getUsername() )
+                                .snippet( "Distance to friend: " + distance )
+
+                );
+                friendMarker.showInfoWindow();
+                friendMarkers.put( friend.getId(), friendMarker );
+            }
+        }
+    }
+
+    private void runUpdateMyLocalizationThread() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                while ( locationListener == null ) {
+                    Thread.yield();
+                }
+                Thread updateMyPositionThread = new MyPositionUpdateThread( locationListener );
+                updateMyPositionThread.start();
+            }
+        };
+        Thread thread = new Thread( runnable );
+        thread.start();
     }
 
     private void switchMapType() {
