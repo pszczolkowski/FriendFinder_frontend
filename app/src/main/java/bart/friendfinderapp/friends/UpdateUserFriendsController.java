@@ -53,8 +53,8 @@ public class UpdateUserFriendsController {
                 JSONArray responseAsJson = new JSONArray( responseMessage );
                 List< User > friends = castResponseToList( responseAsJson );
                 UserFriends.updateUserFriends( friends );
-            } else if ( responseCode != HttpURLConnection.HTTP_OK) {
-                logErrorMessage();
+            } else if ( responseCode != HttpURLConnection.HTTP_OK ) {
+                logErrorMessage( responseCode );
             }
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
@@ -81,16 +81,17 @@ public class UpdateUserFriendsController {
         return stringBuilder.toString();
     }
 
-    private static void logErrorMessage() throws IOException {
+    private static void logErrorMessage( int responseCode ) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );
         String line;
 
         while ( ( line = bufferedReader.readLine() ) != null ) {
             stringBuilder.append( line );
         }
         bufferedReader.close();
-        Log.i( "Server error message", stringBuilder.toString() );
+        Log.i( "Update User Friends", stringBuilder.toString() );
     }
 
     private static List< User > castResponseToList( JSONArray responseAsJson ) throws JSONException {

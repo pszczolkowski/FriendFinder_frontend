@@ -49,7 +49,7 @@ public class UpdateUserFriendsPositionController {
                 Map< String, Localization > friendLocalizations = convertResponseToMap( responseAsJson );
                 UserFriends.updateFriendsLocalizations( friendLocalizations );
             } else if ( responseCode != HttpURLConnection.HTTP_OK ) {
-                logErrorMessage();
+                logErrorMessage(responseCode);
             }
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
@@ -74,16 +74,17 @@ public class UpdateUserFriendsPositionController {
         return stringBuilder.toString();
     }
 
-    private static void logErrorMessage() throws IOException {
+    private static void logErrorMessage( int responseCode) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );
         String line;
 
         while ( ( line = bufferedReader.readLine() ) != null ) {
             stringBuilder.append( line );
         }
         bufferedReader.close();
-        Log.i( "Server error message", stringBuilder.toString() );
+        Log.i( "FriendsPositionUpdate", stringBuilder.toString() );
     }
 
     private static Map< String, Localization > convertResponseToMap( JSONArray responseAsJsonArray ) throws JSONException {

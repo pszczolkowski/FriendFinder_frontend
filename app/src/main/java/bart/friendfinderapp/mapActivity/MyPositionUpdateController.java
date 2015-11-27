@@ -56,7 +56,7 @@ public class MyPositionUpdateController {
                 //Check the response code of request
                 responseCode = connection.getResponseCode();
                 if ( responseCode != HttpURLConnection.HTTP_OK ) {
-                    logErrorMessage();
+                    logErrorMessage(responseCode);
                 }
             } catch ( MalformedURLException e ) {
                 e.printStackTrace();
@@ -71,15 +71,16 @@ public class MyPositionUpdateController {
         return responseCode;
     }
 
-    private static void logErrorMessage() throws IOException {
+    private static void logErrorMessage(int responseCode) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );
         String line;
 
         while ( ( line = bufferedReader.readLine() ) != null ) {
             stringBuilder.append( line );
         }
         bufferedReader.close();
-        Log.i( "Server error message", stringBuilder.toString() );
+        Log.i( "UserPositionUpdate", stringBuilder.toString() );
     }
 }
