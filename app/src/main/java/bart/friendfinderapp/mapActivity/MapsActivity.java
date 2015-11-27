@@ -202,8 +202,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             //trying to delete file with user settings
             new File( LOGIN_FILE ).delete();
 
-            Intent i = new Intent(getApplicationContext(),LoginActivity.class);
-            startActivity(i);
+            Intent i = new Intent( getApplicationContext(), LoginActivity.class );
+            startActivity( i );
+            finish();
 
             return true;
         }
