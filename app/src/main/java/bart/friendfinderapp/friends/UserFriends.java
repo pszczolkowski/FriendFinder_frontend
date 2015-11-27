@@ -63,4 +63,10 @@ public class UserFriends {
         } );
         thread.start();
     }
+
+    public static void mockFriends(String string, Localization localization) {
+        User user = new User( string, string );
+        user.setUserLocalization( localization );
+        userFriends.put( string, user );
+    }
 }
