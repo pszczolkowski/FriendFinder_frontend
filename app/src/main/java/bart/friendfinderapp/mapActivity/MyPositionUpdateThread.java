@@ -8,9 +8,10 @@ import static bart.friendfinderapp.mapActivity.MyPositionUpdateController.sendMy
 public class MyPositionUpdateThread extends Thread {
 
     private final MyCurrentLocationListener locationListener;
-    boolean threadStopped = false;
+    private static boolean threadStopped;
 
     public MyPositionUpdateThread( MyCurrentLocationListener locationListener ) {
+        threadStopped = false;
         this.locationListener = locationListener;
     }
 
@@ -18,8 +19,10 @@ public class MyPositionUpdateThread extends Thread {
     public void run() {
         super.run();
         try {
-            while ( !threadStopped ) {
-                sendMyPosistion( locationListener.getUserLocalization() );
+            while ( true ) {
+                if ( !threadStopped ) {
+                    sendMyPosistion( locationListener.getUserLocalization() );
+                }
                 Thread.sleep( 5000 );
             }
         } catch ( InterruptedException e ) {
@@ -28,7 +31,11 @@ public class MyPositionUpdateThread extends Thread {
 
     }
 
-    public void stopThread() {
+    public static void stopThread() {
         threadStopped = true;
+    }
+
+    public static void restartThread() {
+        threadStopped = false;
     }
 }
