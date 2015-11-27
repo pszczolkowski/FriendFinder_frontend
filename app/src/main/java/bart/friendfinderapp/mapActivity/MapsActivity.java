@@ -36,6 +36,10 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
+        mockFriends( "Sapcio", new Localization( 51.743268, 19.478112 ) );
+        mockFriends( "Pufcio", new Localization( 51.741268, 19.472212 ) );
+        mockFriends( "Hipcio", new Localization( 51.742268, 19.478412 ) );
+        mockFriends( "Lifcio", new Localization( 51.744268, 19.498212 ) );
         setContentView( R.layout.activity_maps );
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById( R.id.map );
