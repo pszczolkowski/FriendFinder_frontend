@@ -20,8 +20,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import java.io.File;
 
 import bart.friendfinderapp.R;
+import bart.friendfinderapp.friends.UserFriendsActivity;
 import bart.friendfinderapp.loginActivity.LoginActivity;
 
+import static bart.friendfinderapp.friends.UserFriends.mockFriends;
 import static bart.friendfinderapp.shared.Constants.LOGIN_FILE;
 
 public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
@@ -36,6 +38,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
+        MyPositionUpdateThread.restartThread();
         mockFriends( "Sapcio", new Localization( 51.743268, 19.478112 ) );
         mockFriends( "Pufcio", new Localization( 51.741268, 19.472212 ) );
         mockFriends( "Hipcio", new Localization( 51.742268, 19.478412 ) );
@@ -182,6 +185,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         }
 
         if ( id == R.id.friends ) {
+            Intent i = new Intent( getApplicationContext(), UserFriendsActivity.class );
+            MyPositionUpdateThread.stopThread();
+            startActivity( i );
             return true;
         }
 
