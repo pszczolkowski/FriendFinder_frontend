@@ -46,6 +46,7 @@ import java.util.List;
 
 import bart.friendfinderapp.R;
 import bart.friendfinderapp.exceptions.UserCantBeReadException;
+import bart.friendfinderapp.friends.UserFriends;
 import bart.friendfinderapp.mapActivity.MapsActivity;
 import bart.friendfinderapp.shared.UserCredentials;
 
@@ -246,6 +247,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         saveDataToFile();
         Intent i = new Intent( LoginActivity.this, MapsActivity.class );
         startActivity( i );
+        UserFriends.requestUpdateOfUserFriends();
         finish();
     }
 
@@ -451,6 +453,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
 
         if ( remember_me && userCredentials != null ) {
             moveToMapActivity();
+            return;
         }
 
         // Reset errors.
@@ -529,7 +532,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             } else if ( responseCode == HttpURLConnection.HTTP_INTERNAL_ERROR ) {
                 createShortToast( getString( R.string.internal_server_error ) );
             } else {
-                createShortToast( "Unknown error - check internet connection");
+                createShortToast( "Unknown error - check internet connection" );
             }
         }
 
