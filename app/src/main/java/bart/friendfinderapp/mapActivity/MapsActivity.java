@@ -192,7 +192,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
     private void switchMapType() {
 
         if(switchMap){
-            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             switchMap=false;
         }
         else{
