@@ -92,7 +92,7 @@ public class UpdateUserFriendsPositionController {
         if ( responseAsJsonArray != null ) {
             for ( int i = 0; i < responseAsJsonArray.length(); i++ ) {
                 JSONObject singleRecord = responseAsJsonArray.getJSONObject( i );
-                friendsLocalizations.put( singleRecord.getString( "FriendId" ), new Localization( singleRecord.getDouble( "Longitude" ), singleRecord.getDouble( "Latitude" ) ) );
+                friendsLocalizations.put( singleRecord.getString( "id" ), new Localization( singleRecord.getDouble( "longitude" ), singleRecord.getDouble( "latitude" ) ) );
             }
         }
         return friendsLocalizations;

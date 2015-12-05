@@ -64,7 +64,6 @@ public class UpdateUserFriendsController {
             e.printStackTrace();
         }
 
-
         return responseCode;
     }
 
@@ -99,7 +98,7 @@ public class UpdateUserFriendsController {
         if ( responseAsJson != null ) {
             for ( int i = 0; i < responseAsJson.length(); i++ ) {
                 JSONObject singleArrayRecord = responseAsJson.getJSONObject( i );
-                users.add( new User( singleArrayRecord.getString( "FriendId" ), singleArrayRecord.getString( "FriendUserName" ) ) );
+                users.add( new User( singleArrayRecord.getString( "id" ), singleArrayRecord.getString( "username" ) ) );
             }
         }
 
