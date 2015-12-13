@@ -47,6 +47,7 @@ import java.util.List;
 import bart.friendfinderapp.R;
 import bart.friendfinderapp.exceptions.UserCantBeReadException;
 import bart.friendfinderapp.friends.UserFriends;
+import bart.friendfinderapp.invitation.UserInvitations;
 import bart.friendfinderapp.mapActivity.MapsActivity;
 import bart.friendfinderapp.shared.UserCredentials;
 
@@ -69,7 +70,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
 
     private Boolean have_an_account = false;
     private Boolean remember_me = false;
-    private Boolean auto_login = false;
 
     /**
      * Keep track of the tryToSignIn task to ensure we can cancel it if requested.
@@ -88,7 +88,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
     private Button registerButton;
     private CheckBox haveAnAccountCheckbox;
     private CheckBox rememberMeChecbox;
-    private CheckBox autoLoginCheckbox;
     private UserCredentials userCredentials;
 
     @Override
@@ -101,9 +100,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             }
             if ( savedInstanceState.containsKey( "remember_me" ) ) {
                 remember_me = (Boolean) savedInstanceState.get( "remember_me" );
-            }
-            if ( savedInstanceState.containsKey( "auto_login" ) ) {
-                auto_login = (Boolean) savedInstanceState.get( "auto_login" );
             }
 
             if ( remember_me ) {
@@ -165,20 +161,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             public void onClick( View v ) {
                 remember_me = !remember_me;
                 setElementsVisibility();
-                autoLoginCheckbox.setEnabled( remember_me );
-                if ( !remember_me ) {
-                    autoLoginCheckbox.setChecked( false );
-                } else {
-                    autoLoginCheckbox.setChecked( auto_login );
-                }
-            }
-        } );
-        autoLoginCheckbox = (CheckBox) findViewById( R.id.auto_login_checkBox );
-        autoLoginCheckbox.setOnClickListener( new OnClickListener() {
-            @Override
-            public void onClick( View v ) {
-                auto_login = !auto_login;
-                setElementsVisibility();
+
             }
         } );
 
@@ -193,39 +176,24 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
          * Set elements visibility
          */
         setElementsVisibility();
+
         if ( remember_me ) {
             if ( userCredentials != null ) {
                 loginView.setText( (CharSequence) userCredentials.getLogin() );
                 loginPasswordView.setText( "******" );
             }
-            autoLoginCheckbox.setEnabled( true );
-        } else {
-            autoLoginCheckbox.setEnabled( false );
         }
-
-        /**
-         * if auto login is enabled move to map activity
-         */
-
-        if ( auto_login ) {
-            if ( userCredentials != null ) {
-                moveToMapActivity();
-            }
-        }
-
     }
 
     private void setCheckboxes() {
         haveAnAccountCheckbox.setChecked( have_an_account );
         rememberMeChecbox.setChecked( remember_me );
-        autoLoginCheckbox.setChecked( auto_login );
     }
 
     private void setElementsVisibility() {
         if ( have_an_account ) {
             loginPasswordView.setVisibility( View.VISIBLE );
             rememberMeChecbox.setVisibility( View.VISIBLE );
-            autoLoginCheckbox.setVisibility( View.VISIBLE );
             signInButton.setVisibility( View.VISIBLE );
 
             addPasswordView.setVisibility( View.GONE );
@@ -234,7 +202,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         } else {
             loginPasswordView.setVisibility( View.GONE );
             rememberMeChecbox.setVisibility( View.GONE );
-            autoLoginCheckbox.setVisibility( View.GONE );
             signInButton.setVisibility( View.GONE );
 
             addPasswordView.setVisibility( View.VISIBLE );
@@ -248,6 +215,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         Intent i = new Intent( LoginActivity.this, MapsActivity.class );
         startActivity( i );
         UserFriends.requestUpdateOfUserFriends();
+        UserInvitations.requestUpdateOfUserInvitations();
         finish();
     }
 
@@ -256,7 +224,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         super.onSaveInstanceState( outState );
         outState.putSerializable( "have_an_account", have_an_account );
         outState.putSerializable( "remember_me", remember_me );
-        outState.putSerializable( "auto_login", auto_login );
 
         if ( remember_me ) {
             try {
@@ -278,7 +245,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             JSONObject jsonObject = new JSONObject();
             jsonObject.put( "have_an_account", have_an_account );
             jsonObject.put( "remember_me", remember_me );
-            jsonObject.put( "auto_login", auto_login );
 
             if ( remember_me ) {
                 try {
@@ -322,7 +288,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
 
             have_an_account = jsonObject.optBoolean( "have_an_account" );
             remember_me = jsonObject.optBoolean( "remember_me" );
-            auto_login = jsonObject.optBoolean( "auto_login" );
 
             if ( remember_me ) {
                 String login = jsonObject.optString( "login" ).trim();
