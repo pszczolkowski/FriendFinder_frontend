@@ -19,11 +19,9 @@ public class MyPositionUpdateThread extends Thread {
     public void run() {
         super.run();
         try {
-            while ( true ) {
-                if ( !threadStopped ) {
-                    sendMyPosistion( locationListener.getUserLocalization() );
-                }
-                Thread.sleep( 5000 );
+            while ( !threadStopped ) {
+                sendMyPosistion( locationListener.getUserLocalization() );
+                Thread.sleep( 1000 );
             }
         } catch ( InterruptedException e ) {
             e.printStackTrace();
@@ -33,9 +31,5 @@ public class MyPositionUpdateThread extends Thread {
 
     public static void stopThread() {
         threadStopped = true;
-    }
-
-    public static void restartThread() {
-        threadStopped = false;
     }
 }
