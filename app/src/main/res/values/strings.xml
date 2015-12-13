@@ -18,7 +18,10 @@
     <string name="user_accout_exists">I have an account</string>
     <string name="prompt_confirm_password">Confirm password</string>
     <string name="remember_me">Remeber my credentials</string>
-    <string name="auto_login">Login automaticly</string>
     <string name="error_passwords_mismatch">Passwords are not equal</string>
     <string name="internal_server_error">Sorry, we encountered internal server error. Please try again later or send us email with information</string>
+    <string name="DECLINE_INVITATION">Decline</string>
+    <string name="ACCEPT_INVITATION">Accept</string>
+    <string name="NO_INVITATIONS_FOUND">You don\'t have any invitations</string>
+    <string name="invite">Invite</string>
 </resources>
