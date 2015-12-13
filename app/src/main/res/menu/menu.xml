@@ -10,15 +10,8 @@
         android:id="@+id/friends"
         android:title="Friends"/>
     <item
-    android:id="@+id/options"
-    android:title="Options"/>
-    <item
-        android:id="@+id/add"
-        android:title="Add"/>
-    <item
-        android:id="@+id/showhide"
-        android:title="Show/Hide"/>
-
+        android:id="@+id/invitations"
+        android:title="Invitations"/>
     <item
         android:id="@+id/logout"
         android:title="Logout me"/>
