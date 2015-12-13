@@ -56,6 +56,8 @@
         </activity>
         <activity android:name=".friends.UserFriendsActivity">
         </activity>
+        <activity android:name=".invitation.InvitationActivity">
+        </activity>
     </application>
 
 </manifest>
