@@ -79,4 +79,9 @@ public class UserFriends {
             mockedUser.setUserLocalization( new Localization( mockedUserLocalization.getLongitude() + 0.001, mockedUserLocalization.getLatitude() + 0.001 ) );
         }
     }
+
+    public static void clear(){
+        userFriends.clear();
+        mockedUsersIds.clear();
+    }
 }

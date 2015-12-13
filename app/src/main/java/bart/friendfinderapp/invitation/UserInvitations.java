@@ -39,4 +39,8 @@ public class UserInvitations {
     public static void remove( int id ) {
         invitationMap.remove( id );
     }
+
+    public static void clear(){
+        invitationMap.clear();
+    }
 }

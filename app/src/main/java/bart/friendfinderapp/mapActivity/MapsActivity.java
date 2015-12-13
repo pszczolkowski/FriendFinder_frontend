@@ -28,9 +28,12 @@ import java.util.Map;
 import bart.friendfinderapp.R;
 import bart.friendfinderapp.friends.UpdateUserFriendsPositionThread;
 import bart.friendfinderapp.friends.User;
+import bart.friendfinderapp.friends.UserFriends;
 import bart.friendfinderapp.friends.UserFriendsActivity;
 import bart.friendfinderapp.invitation.InvitationActivity;
+import bart.friendfinderapp.invitation.UserInvitations;
 import bart.friendfinderapp.loginActivity.LoginActivity;
+import bart.friendfinderapp.shared.UserCredentials;
 
 import static bart.friendfinderapp.friends.UserFriends.getUserFriends;
 
@@ -262,6 +265,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             if ( updateUserFriendsPositionThread != null ) {
                 updateUserFriendsPositionThread.stopThread();
             }
+            UserFriends.clear();
+            UserInvitations.clear();
+            UserCredentials.clear();
             Intent i = new Intent( getApplicationContext(), LoginActivity.class );
             startActivity( i );
             finish();

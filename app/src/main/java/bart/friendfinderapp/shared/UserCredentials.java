@@ -42,4 +42,8 @@ public class UserCredentials {
     public String getExpiration() {
         return expiration;
     }
+
+    public static void clear(){
+        userCredentials = null;
+    }
 }
