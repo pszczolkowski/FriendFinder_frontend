@@ -29,6 +29,7 @@ public class UserFriendsActivity extends Activity {
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_user_friends );
+        refreshUserFriends();
 
         List< User > userFriends = getUserFriends();
 
@@ -62,7 +63,6 @@ public class UserFriendsActivity extends Activity {
             }
         } );
 
-        refreshUserFriends();
 
     }
 
