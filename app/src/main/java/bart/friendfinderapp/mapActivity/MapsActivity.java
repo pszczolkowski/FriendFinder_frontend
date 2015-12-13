@@ -21,38 +21,33 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import bart.friendfinderapp.R;
+import bart.friendfinderapp.friends.UpdateUserFriendsPositionThread;
 import bart.friendfinderapp.friends.User;
 import bart.friendfinderapp.friends.UserFriendsActivity;
+import bart.friendfinderapp.invitation.InvitationActivity;
 import bart.friendfinderapp.loginActivity.LoginActivity;
 
 import static bart.friendfinderapp.friends.UserFriends.getUserFriends;
-import static bart.friendfinderapp.friends.UserFriends.mockFriends;
-import static bart.friendfinderapp.shared.Constants.LOGIN_FILE;
 
 public class MapsActivity extends ActionBarActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     MyCurrentLocationListener locationListener;
     private LocationManager locationManager;
-    private Thread updateMyLocalizationThread;
 
     boolean switchMap = true;
     private final Map< String, Marker > friendMarkers = new HashMap<>();
+    private MyPositionUpdateThread updateMyPositionThread;
+    private UpdateUserFriendsPositionThread updateUserFriendsPositionThread;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        MyPositionUpdateThread.restartThread();
-        mockFriends( "Sapcio", new Localization( 51.743268, 19.478112 ) );
-        mockFriends( "Pufcio", new Localization( 51.741268, 19.472212 ) );
-        mockFriends( "Hipcio", new Localization( 51.742268, 19.478412 ) );
-        mockFriends( "Lifcio", new Localization( 51.744268, 19.498212 ) );
         setContentView( R.layout.activity_maps );
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById( R.id.map );
@@ -60,9 +55,9 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         mapFragment.getMapAsync( this );
 
-
-
         runUpdateMyLocalizationThread();
+        startCheckingForFriendsPositionsChanges();
+
     }
 
     /**
@@ -80,11 +75,12 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         locationListener = new MyCurrentLocationListener( mMap );
         getPositionFromGPS( locationListener );
-        mMap.setOnMyLocationChangeListener(locationListener);
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setZoomControlsEnabled(true);
-        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        showFriends();
+        mMap.setOnMyLocationChangeListener( locationListener );
+        mMap.setMyLocationEnabled( true );
+        mMap.getUiSettings().setZoomControlsEnabled( true );
+        mMap.setMapType( GoogleMap.MAP_TYPE_NORMAL );
+
+        updateFriendsMarkers();
     }
 
     // OBSLUGA GPS
@@ -92,7 +88,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         LocationManager locationManager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
         if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-            Toast.makeText( this, "GPS is Enabled in your devide", Toast.LENGTH_SHORT ).show();
+            Toast.makeText( this, "GPS is Enabled in your device", Toast.LENGTH_SHORT ).show();
         } else {
             showGPSDisabledAlertToUser();
         }
@@ -109,12 +105,12 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder( this );
         alertDialogBuilder
                 .setMessage( "You didn't accept sharing your gps location and without it app is useless." )
-                .setNegativeButton("Ok",
+                .setNegativeButton( "Ok",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
+                            public void onClick( DialogInterface dialog, int id ) {
                                 dialog.cancel();
                             }
-                        });
+                        } );
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
@@ -131,45 +127,40 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                                 startActivity( callGPSSettingIntent );
                             }
                         } );
-        alertDialogBuilder.setNegativeButton("Cancel",
+        alertDialogBuilder.setNegativeButton( "Cancel",
                 new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+                    public void onClick( DialogInterface dialog, int id ) {
                         dialog.cancel();
                     }
-                });
+                } );
         AlertDialog alert = alertDialogBuilder.create();
         alert.show();
     }
 
     private void startCheckingForFriendsPositionsChanges() {
-        
+        updateUserFriendsPositionThread = new UpdateUserFriendsPositionThread( this );
+        updateUserFriendsPositionThread.start();
     }
 
-    private void showFriends() {
-        List< User > friends = getUserFriends();
-        for ( User friend : friends ) {
-            if ( friend.isUserShownOnMap() ) {
-                Location userLocation = new Location( "user" );
-                String distance = "unknown";
-                if ( locationListener != null && locationListener.getUserLocalization() != null ) {
-                    Localization userLocalization = locationListener.getUserLocalization();
-                    userLocation.setLongitude( userLocalization.getLongitude() );
-                    userLocation.setLatitude( userLocalization.getLatitude() );
-
-                    Location friendLocation = new Location( "friend" );
-                    friendLocation.setLatitude( friend.getUserLocalization().getLatitude() );
-                    friendLocation.setLongitude( friend.getUserLocalization().getLongitude() );
-                    distance = String.valueOf( friendLocation.distanceTo( userLocation ) );
+    public void updateFriendsMarkers() {
+        List< User > friendsList = getUserFriends();
+        for ( User friend : friendsList ) {
+            if ( friendShouldBeShowedOnMap( friend ) ) {
+                if ( friendMarkers.containsKey( friend.getId() ) ) {
+                    Marker friendMarker = friendMarkers.get( friend.getId() );
+                    friendMarker.setPosition( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) );
+                } else {
+                    friendMarkers.put( friend.getId(), mMap.addMarker( new MarkerOptions()
+                                    .position( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) )
+                                    .title( friend.getUsername() )
+                                    .snippet( calculateDistance( friend.getUserLocalization() ) )
+                    ) );
                 }
-                Marker friendMarker = mMap.addMarker(
-                        new MarkerOptions()
-                                .position( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) )
-                                .title( friend.getUsername() )
-                                .snippet( "Distance to friend: " + distance )
-
-                );
-                friendMarker.showInfoWindow();
-                friendMarkers.put( friend.getId(), friendMarker );
+            } else {
+                if ( friendMarkers.containsKey( friend.getId() ) ) {
+                    friendMarkers.get( friend.getId() ).setVisible( false );
+                    friendMarkers.remove( friend.getId() );
+                }
             }
         }
     }
@@ -181,7 +172,7 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
                 while ( locationListener == null ) {
                     Thread.yield();
                 }
-                Thread updateMyPositionThread = new MyPositionUpdateThread( locationListener );
+                updateMyPositionThread = new MyPositionUpdateThread( locationListener );
                 updateMyPositionThread.start();
             }
         };
@@ -189,24 +180,47 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
         thread.start();
     }
 
-    private void switchMapType() {
+    private boolean friendShouldBeShowedOnMap( User friend ) {
+        return friend.isUserShownOnMap() && friendPositionKnown( friend );
+    }
 
-        if(switchMap){
-            mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-            switchMap=false;
-        }
-        else{
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-            switchMap=true;
+    private boolean friendPositionKnown( User friend ) {
+        return friend.getUserLocalization() != null;
+    }
+
+    private String calculateDistance( Localization friendLocalization ) {
+        Localization userLocalization = locationListener.getUserLocalization();
+        if ( userLocalization != null ) {
+            Location userLocation = new Location( "user" );
+            userLocation.setLatitude( userLocalization.getLatitude() );
+            userLocation.setLongitude( userLocalization.getLongitude() );
+            Location friendLocation = new Location( "friend" );
+            userLocation.setLatitude( friendLocalization.getLatitude() );
+            userLocation.setLongitude( friendLocalization.getLongitude() );
+
+            return "Distance to friend: " + userLocation.distanceTo( friendLocation ) + "m";
+        } else {
+            return "It's not possible to calculate distance";
         }
 
     }
 
+    private void switchMapType() {
+
+        if ( switchMap ) {
+            mMap.setMapType( GoogleMap.MAP_TYPE_HYBRID );
+            switchMap = false;
+        } else {
+            mMap.setMapType( GoogleMap.MAP_TYPE_NORMAL );
+            switchMap = true;
+        }
+
+    }
 
     // MENU
     public boolean onCreateOptionsMenu( Menu menu ) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu, (android.view.Menu) menu);
+        menuInflater.inflate( R.menu.menu, (android.view.Menu) menu );
 
         return true;
     }
@@ -233,23 +247,21 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
             return true;
         }
 
-        if ( id == R.id.options ) {
-            return true;
-        }
-
-        if ( id == R.id.add ) {
-            return true;
-        }
-
-        if ( id == R.id.showhide ) {
+        if ( id == R.id.invitations ) {
+            Intent i = new Intent( getApplicationContext(), InvitationActivity.class );
+            MyPositionUpdateThread.stopThread();
+            startActivity( i );
             return true;
         }
 
         if ( id == R.id.logout ) {
 
-            //trying to delete file with user settings
-            new File( LOGIN_FILE ).delete();
-
+            if ( updateMyPositionThread != null ) {
+                updateMyPositionThread.stopThread();
+            }
+            if ( updateUserFriendsPositionThread != null ) {
+                updateUserFriendsPositionThread.stopThread();
+            }
             Intent i = new Intent( getApplicationContext(), LoginActivity.class );
             startActivity( i );
             finish();
@@ -259,8 +271,6 @@ public class MapsActivity extends ActionBarActivity implements OnMapReadyCallbac
 
         return super.onOptionsItemSelected( item );
     }
-
-
 
 
 }
