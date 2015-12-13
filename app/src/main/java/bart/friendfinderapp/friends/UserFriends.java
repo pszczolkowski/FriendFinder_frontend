@@ -12,11 +12,11 @@ import static bart.friendfinderapp.friends.UpdateUserFriendsController.sendReque
 /**
  * Created by Godzio on 2015-11-26.
  * This class stores information about user friends
- * TODO save this class and User class to file in memory to store information about showing or hiding friends
  */
 public class UserFriends {
 
     private static Map< String, User > userFriends = new HashMap<>();
+    private static List< String > mockedUsersIds = new ArrayList<>();
 
     /**
      * Method to get User Friends as List
@@ -64,9 +64,19 @@ public class UserFriends {
         thread.start();
     }
 
-    public static void mockFriends(String string, Localization localization) {
+    public static void mockFriends( String string, Localization localization ) {
         User user = new User( string, string );
         user.setUserLocalization( localization );
         userFriends.put( string, user );
+        mockedUsersIds.add( string );
+    }
+
+    public static void moveMocks() {
+        for ( String mockId : mockedUsersIds ) {
+            User mockedUser = userFriends.get( mockId );
+            Localization mockedUserLocalization = mockedUser.getUserLocalization();
+
+            mockedUser.setUserLocalization( new Localization( mockedUserLocalization.getLongitude() + 0.001, mockedUserLocalization.getLatitude() + 0.001 ) );
+        }
     }
 }
