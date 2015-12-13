@@ -18,12 +18,16 @@ import bart.friendfinderapp.R;
  */
 public class FriendListElementAdapter extends ArrayAdapter< User > {
     private final Context context;
-    private final List< User > friends;
+    private List< User > friends;
 
     public FriendListElementAdapter( Context context, List< User > friends ) {
         super( context, R.layout.single_friend_element, friends );
         this.context = context;
         this.friends = friends;
+    }
+    public void updateUserFriendsList ( List<User> friends){
+        this.friends = friends;
+        this.notifyDataSetChanged();
     }
 
     @Override
