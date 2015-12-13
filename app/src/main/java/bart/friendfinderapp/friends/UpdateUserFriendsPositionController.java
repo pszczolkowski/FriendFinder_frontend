@@ -49,32 +49,37 @@ public class UpdateUserFriendsPositionController {
                 Map< String, Localization > friendLocalizations = convertResponseToMap( responseAsJson );
                 UserFriends.updateFriendsLocalizations( friendLocalizations );
             } else if ( responseCode != HttpURLConnection.HTTP_OK ) {
-                logErrorMessage(responseCode);
+                logErrorMessage( responseCode );
             }
+
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
         } catch ( IOException e ) {
             e.printStackTrace();
         } catch ( JSONException e ) {
             e.printStackTrace();
+        }finally {
+            connection.disconnect();
         }
         return responseCode;
     }
 
     private static String readResponseBody() throws IOException {
+        if ( connection != null ) {
+            BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
+            StringBuilder stringBuilder = new StringBuilder();
+            String line;
 
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-
-        while ( ( line = bufferedReader.readLine() ) != null ) {
-            stringBuilder.append( line );
+            while ( ( line = bufferedReader.readLine() ) != null ) {
+                stringBuilder.append( line );
+            }
+            bufferedReader.close();
+            return stringBuilder.toString();
         }
-        bufferedReader.close();
-        return stringBuilder.toString();
+        return null;
     }
 
-    private static void logErrorMessage( int responseCode) throws IOException {
+    private static void logErrorMessage( int responseCode ) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );

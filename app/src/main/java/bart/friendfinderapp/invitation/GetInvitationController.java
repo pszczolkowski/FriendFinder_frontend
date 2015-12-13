@@ -54,12 +54,15 @@ public class GetInvitationController {
             } else if ( responseCode != HttpURLConnection.HTTP_OK ) {
                 logErrorMessage( responseCode );
             }
+
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
         } catch ( IOException e ) {
             e.printStackTrace();
         } catch ( JSONException e ) {
             e.printStackTrace();
+        }finally {
+            connection.disconnect();
         }
         return responseCode;
     }

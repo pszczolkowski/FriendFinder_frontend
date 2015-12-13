@@ -53,17 +53,19 @@ public class UpdateUserFriendsController {
                 JSONArray responseAsJson = new JSONArray( responseMessage );
                 List< User > friends = castResponseToList( responseAsJson );
                 UserFriends.updateUserFriends( friends );
-            } else if ( responseCode != HttpURLConnection.HTTP_OK ) {
+            } else {
                 logErrorMessage( responseCode );
             }
+
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
         } catch ( IOException e ) {
             e.printStackTrace();
         } catch ( JSONException e ) {
             e.printStackTrace();
+        } finally {
+            connection.disconnect();
         }
-
         return responseCode;
     }
 

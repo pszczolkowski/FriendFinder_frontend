@@ -53,6 +53,8 @@ public class SendInvitationController {
             e.printStackTrace();
         } catch ( IOException e ) {
             e.printStackTrace();
+        }finally {
+            connection.disconnect();
         }
 
         return response;

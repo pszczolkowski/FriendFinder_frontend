@@ -25,7 +25,7 @@ public class RefuseInvitationController {
     public static int sendRequest( int invitationId ) {
         int responseCode = 0;
         try {
-            url = new URL( APP_URL + "/user/" + invitationId + "/accept" );
+            url = new URL( APP_URL + "/invitation/" + invitationId + "/decline" );
             connection = (HttpURLConnection) url.openConnection();
 
             connection.setRequestMethod( "POST" );
@@ -44,12 +44,15 @@ public class RefuseInvitationController {
             if ( responseCode != HttpURLConnection.HTTP_OK ) {
                 logErrorMessage( responseCode );
             }
+
         } catch ( MalformedURLException e ) {
             e.printStackTrace();
         } catch ( ProtocolException e ) {
             e.printStackTrace();
         } catch ( IOException e ) {
             e.printStackTrace();
+        }finally {
+            connection.disconnect();
         }
         return responseCode;
     }
