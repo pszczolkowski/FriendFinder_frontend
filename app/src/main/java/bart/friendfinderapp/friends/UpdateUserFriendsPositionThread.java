@@ -2,20 +2,20 @@ package bart.friendfinderapp.friends;
 
 import java.net.HttpURLConnection;
 
-import bart.friendfinderapp.mapActivity.MapsActivity;
+import bart.friendfinderapp.mapActivity.MapFragment;
 
 import static bart.friendfinderapp.friends.UpdateUserFriendsPositionController.sendRequest;
-import static com.google.android.gms.internal.zzid.runOnUiThread;
+import static com.google.android.gms.internal.zzip.runOnUiThread;
 
 /**
  * Created by Godzio on 2015-11-27.
  */
 public class UpdateUserFriendsPositionThread extends Thread {
 
-    private final MapsActivity map;
+    private final MapFragment map;
     private boolean threadRunning;
 
-    public UpdateUserFriendsPositionThread( MapsActivity map ) {
+    public UpdateUserFriendsPositionThread( MapFragment map ) {
         this.map = map;
         threadRunning = true;
     }
