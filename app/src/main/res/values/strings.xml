@@ -36,4 +36,5 @@
     <string name="satellite">Satellite Map</string>
     <string name="map_type">Change map type</string>
     <string name="normal_map">Normal Map</string>
+    <string name="nav_logout">Logout</string>
 </resources>

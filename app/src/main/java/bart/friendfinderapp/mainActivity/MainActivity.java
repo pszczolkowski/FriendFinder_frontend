@@ -1,5 +1,6 @@
 package bart.friendfinderapp.mainActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -16,7 +17,10 @@ import android.widget.TextView;
 
 import bart.friendfinderapp.R;
 import bart.friendfinderapp.friends.FragmentUserFriends;
+import bart.friendfinderapp.friends.UserFriends;
 import bart.friendfinderapp.invitation.FragmentUserInvitations;
+import bart.friendfinderapp.invitation.UserInvitations;
+import bart.friendfinderapp.loginActivity.LoginActivity;
 import bart.friendfinderapp.mapActivity.MapFragment;
 import bart.friendfinderapp.mapActivity.MapType;
 import bart.friendfinderapp.shared.UserCredentials;
@@ -116,6 +120,15 @@ public class MainActivity extends AppCompatActivity
             if(fragment.getClass().equals( MapFragment.class )){
                 ((MapFragment) fragment).switchMapType( MapType.HYBRID );
             }
+        } else if( id == R.id.nav_logout){
+            UserFriends.clear();
+            UserInvitations.clear();
+            UserCredentials.clear();
+
+            Intent intent = new Intent( getApplicationContext(), LoginActivity.class );
+            startActivity( intent );
+            finish();
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById( R.id.drawer_layout );
