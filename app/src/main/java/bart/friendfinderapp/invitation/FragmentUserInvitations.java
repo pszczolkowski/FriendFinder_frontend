@@ -1,13 +1,16 @@
 package bart.friendfinderapp.invitation;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,23 +22,33 @@ import bart.friendfinderapp.R;
 import static bart.friendfinderapp.invitation.UserInvitations.getUserInvitations;
 import static bart.friendfinderapp.invitation.UserInvitations.requestUpdateOfUserInvitations;
 
-public class InvitationActivity extends Activity {
+public class FragmentUserInvitations extends Fragment {
 
     private InvitationsListElementAdapter adapter;
+    private LinearLayout fragmentLayout;
+
+    public FragmentUserInvitations(){}
+    
+    public static Fragment newInstance(){
+        FragmentUserInvitations fragment = new FragmentUserInvitations();
+        Bundle args = new Bundle();
+        fragment.setArguments( args );
+        return fragment;
+    }
 
     @Override
-    protected void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_invitation );
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState ) {
+        fragmentLayout = (LinearLayout) inflater.inflate( R.layout.fragment_user_invitation, container, false );
 
         requestUpdateOfUserInvitations();
         List< Invitation > invitations = getUserInvitations();
 
-        ListView invitationsListView = (ListView) findViewById( R.id.invitationListView );
-        adapter = new InvitationsListElementAdapter( this, this, invitations );
+        ListView invitationsListView = (ListView) fragmentLayout.findViewById( R.id.invitationListView );
+        adapter = new InvitationsListElementAdapter( super.getActivity(), this, invitations );
         invitationsListView.setAdapter( adapter );
 
-        TextView noInvitations = (TextView) findViewById( R.id.noInvitationTextView );
+        TextView noInvitations = (TextView) fragmentLayout.findViewById( R.id.noInvitationTextView );
 
         if ( invitations.size() == 0 ) {
             noInvitations.setVisibility( View.VISIBLE );
@@ -45,19 +58,20 @@ public class InvitationActivity extends Activity {
             noInvitations.setVisibility( View.INVISIBLE );
         }
 
-        Button inviteButton = (Button) findViewById( R.id.inviteButton );
+        Button inviteButton = (Button) fragmentLayout.findViewById( R.id.inviteButton );
         inviteButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
                 sendInvitation();
             }
         } );
+        return fragmentLayout;
     }
 
     private void sendInvitation() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder( this );
+        final AlertDialog.Builder alert = new AlertDialog.Builder( super.getActivity() );
         alert.setTitle( "Invite friend" );
-        final EditText usernameInput = new EditText( this );
+        final EditText usernameInput = new EditText( super.getActivity() );
         alert.setView( usernameInput );
 
         alert.setPositiveButton( "Send", new DialogInterface.OnClickListener() {
@@ -92,6 +106,6 @@ public class InvitationActivity extends Activity {
     }
 
     private void createShortToast( String message ) {
-        Toast.makeText( this, message, Toast.LENGTH_SHORT ).show();
+        Toast.makeText( super.getActivity(), message, Toast.LENGTH_SHORT ).show();
     }
 }

@@ -24,13 +24,13 @@ import static bart.friendfinderapp.invitation.UserInvitations.getUserInvitations
 public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
     private final Context context;
     private List< Invitation > invitations;
-    private final InvitationActivity invitationActivity;
+    private final FragmentUserInvitations invitationFragment;
 
-    public InvitationsListElementAdapter( Context context, InvitationActivity invitationActivity, List< Invitation > invitations ) {
+    public InvitationsListElementAdapter( Context context, FragmentUserInvitations invitationFragment, List< Invitation > invitations ) {
         super( context, R.layout.single_invitation_element, invitations );
         this.context = context;
         this.invitations = invitations;
-        this.invitationActivity = invitationActivity;
+        this.invitationFragment = invitationFragment;
     }
 
     @Override
@@ -113,6 +113,6 @@ public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
 
     private void createShortToast( String message ) {
         Log.d( "response", message );
-        Toast.makeText( invitationActivity, message, Toast.LENGTH_SHORT ).show();
+        Toast.makeText( context, message, Toast.LENGTH_SHORT ).show();
     }
 }
