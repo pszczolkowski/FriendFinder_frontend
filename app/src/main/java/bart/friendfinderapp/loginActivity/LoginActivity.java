@@ -65,6 +65,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    public static final String MOCK_PASSWORD = "******";
 
     private Boolean have_an_account = false;
     private Boolean remember_me = false;
@@ -184,7 +185,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         if ( remember_me ) {
             if ( userCredentials != null ) {
                 loginView.setText( (CharSequence) userCredentials.getLogin() );
-                loginPasswordView.setText( "******" );
+                loginPasswordView.setText( MOCK_PASSWORD );
             }
         }
     }
@@ -422,10 +423,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             return;
         }
 
-        if ( remember_me && userCredentials != null ) {
-            moveToMainActivity();
-            return;
-        }
 
         // Reset errors.
         loginView.setError( null );
@@ -435,6 +432,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         String login = loginView.getText().toString().trim();
         String password = loginPasswordView.getText().toString().trim();
 
+        if ( remember_me && userCredentials != null && password.equals( MOCK_PASSWORD )) {
+            moveToMainActivity();
+            return;
+        }
         boolean cancel = false;
         View focusView = null;
 
