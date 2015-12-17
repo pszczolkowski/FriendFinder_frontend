@@ -57,8 +57,8 @@ public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
                         int responseCode = (int) o;
                         if ( responseCode == HttpURLConnection.HTTP_OK ) {
                             createShortToast( "Invitation accepted" );
-                            invitations.remove( invitation );
                             UserInvitations.remove( invitation.getId() );
+                            InvitationsListElementAdapter.this.remove( invitation );
                             notifyDataSetChanged();
                         } else if ( responseCode == HttpURLConnection.HTTP_BAD_REQUEST ) {
                             createShortToast( "Invitation not found" );
@@ -89,6 +89,7 @@ public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
                         if ( responseCode == HttpURLConnection.HTTP_OK ) {
                             createShortToast( "Invitation refused" );
                             UserInvitations.remove( invitation.getId() );
+                            InvitationsListElementAdapter.this.remove( invitation );
                             notifyDataSetChanged();
                         } else if ( responseCode == HttpURLConnection.HTTP_BAD_REQUEST ) {
                             createShortToast( "Invitation not found" );
