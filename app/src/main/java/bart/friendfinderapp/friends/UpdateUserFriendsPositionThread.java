@@ -25,7 +25,6 @@ public class UpdateUserFriendsPositionThread extends Thread {
         while ( threadRunning ) {
             int response = new UpdateUserFriendsPositionController().sendRequest();
             if ( response == HttpURLConnection.HTTP_OK ) {
-//                UserFriends.moveMocks();
                 runOnUiThread( new Runnable() {
                     @Override
                     public void run() {
