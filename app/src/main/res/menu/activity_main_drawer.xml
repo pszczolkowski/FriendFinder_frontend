@@ -30,7 +30,7 @@
 
         </menu>
     </item>
-    <item android:title="Account">
+    <item android:title="@string/account_label">
         <menu>
             <item
                 android:id="@+id/nav_logout"

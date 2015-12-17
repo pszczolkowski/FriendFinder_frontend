@@ -37,4 +37,7 @@
     <string name="map_type">Change map type</string>
     <string name="normal_map">Normal Map</string>
     <string name="nav_logout">Logout</string>
+    <string name="no_friends">You have no friends added :(</string>
+    <string name="refresh">Refresh</string>
+    <string name="account_label">Account</string>
 </resources>
