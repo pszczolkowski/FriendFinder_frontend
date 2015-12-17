@@ -97,7 +97,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         LocationManager locationManager = (LocationManager) super.getActivity().getSystemService( Context.LOCATION_SERVICE );
 
         if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-            Toast.makeText( super.getActivity(), "GPS is Enabled in your device", Toast.LENGTH_SHORT ).show();
+           // Toast.makeText( super.getActivity(), "GPS is Enabled in your device", Toast.LENGTH_SHORT ).show();
         } else {
             showGPSDisabledAlertToUser();
         }
