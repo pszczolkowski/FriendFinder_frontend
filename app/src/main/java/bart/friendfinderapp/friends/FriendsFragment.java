@@ -27,6 +27,7 @@ public class FriendsFragment extends Fragment {
 
     private ListView friendsListView;
     private FriendListElementAdapter adapter;
+    private Button refreshButton;
 
     public FriendsFragment() {
     }
@@ -37,6 +38,7 @@ public class FriendsFragment extends Fragment {
         fragment.setArguments( args );
         return fragment;
     }
+
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
@@ -68,7 +70,7 @@ public class FriendsFragment extends Fragment {
             }
         } );
 
-        Button refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshFriendsListButton );
+        refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshFriendsListButton );
         refreshButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -82,6 +84,13 @@ public class FriendsFragment extends Fragment {
     private void refreshUserFriends() {
         AsyncTask asyncTask = new AsyncTask() {
             @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if ( refreshButton != null )
+                    refreshButton.setEnabled( false );
+            }
+
+            @Override
             protected Object doInBackground( Object[] params ) {
                 return new UpdateUserFriendsController().sendRequest();
             }
@@ -94,6 +103,8 @@ public class FriendsFragment extends Fragment {
                     adapter.updateUserFriendsList( getUserFriends() );
                     createShortToast( "Refreshed" );
                 }
+                if ( refreshButton != null )
+                    refreshButton.setEnabled( true );
             }
         };
         asyncTask.execute();

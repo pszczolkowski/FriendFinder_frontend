@@ -26,6 +26,7 @@ public class InvitationsFragment extends Fragment {
 
     private InvitationsListElementAdapter adapter;
     private LinearLayout fragmentLayout;
+    private Button refreshButton;
 
     public InvitationsFragment(){}
     
@@ -66,7 +67,7 @@ public class InvitationsFragment extends Fragment {
             }
         } );
 
-        Button refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshInvitationListButton);
+        refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshInvitationListButton);
         refreshButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -79,6 +80,14 @@ public class InvitationsFragment extends Fragment {
 
     private void refreshInvitationList() {
         AsyncTask asyncTask = new AsyncTask() {
+
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                if ( refreshButton != null )
+                    refreshButton.setEnabled( false );
+            }
+
             @Override
             protected Object doInBackground( Object[] params ) {
                 return new GetInvitationController().sendRequest();
@@ -92,6 +101,8 @@ public class InvitationsFragment extends Fragment {
                     adapter.updateList();
                     createShortToast( "Refreshed" );
                 }
+                if ( refreshButton != null )
+                    refreshButton.setEnabled( true );
             }
         };
         asyncTask.execute();
