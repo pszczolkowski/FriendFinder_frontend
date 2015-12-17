@@ -7,8 +7,6 @@ import java.util.Map;
 
 import bart.friendfinderapp.mapActivity.Localization;
 
-import static bart.friendfinderapp.friends.UpdateUserFriendsController.sendRequest;
-
 /**
  * Created by Godzio on 2015-11-26.
  * This class stores information about user friends
@@ -16,7 +14,6 @@ import static bart.friendfinderapp.friends.UpdateUserFriendsController.sendReque
 public class UserFriends {
 
     private static Map< String, User > userFriends = new HashMap<>();
-    private static List< String > mockedUsersIds = new ArrayList<>();
 
     /**
      * Method to get User Friends as List
@@ -58,30 +55,13 @@ public class UserFriends {
         Thread thread = new Thread( new Runnable() {
             @Override
             public void run() {
-                sendRequest();
+                new UpdateUserFriendsController().sendRequest();
             }
         } );
         thread.start();
     }
 
-    public static void mockFriends( String string, Localization localization ) {
-        User user = new User( string, string );
-        user.setUserLocalization( localization );
-        userFriends.put( string, user );
-        mockedUsersIds.add( string );
-    }
-
-    public static void moveMocks() {
-        for ( String mockId : mockedUsersIds ) {
-            User mockedUser = userFriends.get( mockId );
-            Localization mockedUserLocalization = mockedUser.getUserLocalization();
-
-            mockedUser.setUserLocalization( new Localization( mockedUserLocalization.getLongitude() + 0.001, mockedUserLocalization.getLatitude() + 0.001 ) );
-        }
-    }
-
     public static void clear(){
         userFriends.clear();
-        mockedUsersIds.clear();
     }
 }

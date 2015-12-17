@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import bart.friendfinderapp.R;
+import bart.friendfinderapp.exceptions.UserCantBeReadException;
 import bart.friendfinderapp.friends.FragmentUserFriends;
 import bart.friendfinderapp.friends.UserFriends;
 import bart.friendfinderapp.invitation.FragmentUserInvitations;
@@ -54,11 +55,16 @@ public class MainActivity extends AppCompatActivity
 
         View headerView = navigationView.inflateHeaderView( R.layout.nav_header_main );
         TextView username = ( TextView )headerView.findViewById( R.id.username );
-        UserCredentials userCredentials= getUserCredentials();
-        if( username != null && userCredentials != null ){
-            username.setText( userCredentials.getLogin() );
-        }
 
+        try {
+            UserCredentials userCredentials = getUserCredentials();
+
+            if ( username != null && userCredentials != null ) {
+                username.setText( userCredentials.getLogin() );
+            }
+        } catch ( UserCantBeReadException e ) {
+            e.printStackTrace();
+        }
         fragmentManager = getSupportFragmentManager();
         fragment = MapFragment.newInstance();
         fragmentManager.beginTransaction().replace( R.id.main_fragment, fragment ).commit();

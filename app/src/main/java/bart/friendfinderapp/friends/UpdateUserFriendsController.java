@@ -25,10 +25,10 @@ import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
  */
 public class UpdateUserFriendsController {
 
-    private static HttpURLConnection connection;
-    private static URL url;
+    private HttpURLConnection connection;
+    private URL url;
 
-    public static int sendRequest() {
+    public int sendRequest() {
         int responseCode = 0;
 
         try {
@@ -69,7 +69,7 @@ public class UpdateUserFriendsController {
         return responseCode;
     }
 
-    private static String readResponseBody() throws IOException {
+    private String readResponseBody() throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
@@ -82,7 +82,7 @@ public class UpdateUserFriendsController {
         return stringBuilder.toString();
     }
 
-    private static void logErrorMessage( int responseCode ) throws IOException {
+    private void logErrorMessage( int responseCode ) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );
@@ -95,7 +95,7 @@ public class UpdateUserFriendsController {
         Log.i( "Update User Friends", stringBuilder.toString() );
     }
 
-    private static List< User > castResponseToList( JSONArray responseAsJson ) throws JSONException {
+    private List< User > castResponseToList( JSONArray responseAsJson ) throws JSONException {
         List< User > users = new ArrayList<>();
         if ( responseAsJson != null ) {
             for ( int i = 0; i < responseAsJson.length(); i++ ) {

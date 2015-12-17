@@ -19,10 +19,10 @@ import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
  */
 public class AcceptInvitationController {
 
-    private static URL url;
-    private static HttpURLConnection connection;
+    private URL url;
+    private HttpURLConnection connection;
 
-    public static int sendRequest( int invitationId ) {
+    public int sendRequest( int invitationId ) {
         int responseCode = 0;
         try {
             url = new URL( APP_URL + "/invitation/" + invitationId + "/accept" );
@@ -56,7 +56,7 @@ public class AcceptInvitationController {
         return responseCode;
     }
 
-    private static void logErrorMessage( int responseCode ) throws IOException {
+    private void logErrorMessage( int responseCode ) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );

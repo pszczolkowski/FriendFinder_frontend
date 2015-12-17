@@ -17,8 +17,8 @@ import static bart.friendfinderapp.shared.Constants.GLOBAL_TIMEOUT;
  */
 public class RegisterController {
 
-    private static HttpURLConnection connection;
-    private static URL url;
+    private HttpURLConnection connection;
+    private URL url;
 
     /**
      * Method to send registration request to server
@@ -26,7 +26,7 @@ public class RegisterController {
      * @param password
      * @return server response code (possible values are: 200, 400 or 500)
      */
-    public static int tryToRegister( String login, String password ) {
+    public int tryToRegister( String login, String password ) {
         int responseCode = 0;
         try {
             //Create connection to server

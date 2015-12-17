@@ -22,10 +22,10 @@ import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
  */
 public class MyPositionUpdateController {
 
-    private static URL url;
-    private static HttpURLConnection connection;
+    private URL url;
+    private HttpURLConnection connection;
 
-    public static int sendMyPosistion( Localization userLocalization ) {
+    public int sendMyPosistion( Localization userLocalization ) {
         int responseCode = 0;
         if ( userLocalization != null ) {
             double longitude = userLocalization.getLongitude();
@@ -71,7 +71,7 @@ public class MyPositionUpdateController {
         return responseCode;
     }
 
-    private static void logErrorMessage(int responseCode) throws IOException {
+    private void logErrorMessage(int responseCode) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );

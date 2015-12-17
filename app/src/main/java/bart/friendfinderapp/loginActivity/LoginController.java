@@ -23,8 +23,8 @@ import static bart.friendfinderapp.shared.UserCredentials.createUserCredentials;
  */
 public class LoginController {
 
-    private static HttpURLConnection connection;
-    private static URL url;
+    private HttpURLConnection connection;
+    private URL url;
 
     /**
      * Method to send login request to server
@@ -32,7 +32,7 @@ public class LoginController {
      * @param password
      * @return server response code (possible values are: 200, 400 or 500)
      */
-    public static int tryToSignIn( String login, String password ) {
+    public int tryToSignIn( String login, String password ) {
         int responseCode = 0;
         try {
             //Create connection to server
@@ -85,7 +85,7 @@ public class LoginController {
      * @param responseAsString
      * @throws JSONException
      */
-    private static void createUserCredentialsFromResponse( String responseAsString ) throws JSONException {
+    private void createUserCredentialsFromResponse( String responseAsString ) throws JSONException {
         JSONObject responseAsJsonObject = new JSONObject( responseAsString );
         String token = responseAsJsonObject.getString( "access_token" );
         String username = responseAsJsonObject.getString( "userName" );
@@ -99,7 +99,7 @@ public class LoginController {
      * @return Server response as concatenated String
      * @throws IOException
      */
-    private static String readResponseBody() throws IOException {
+    private String readResponseBody() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         InputStream inputStream = connection.getInputStream();
         InputStreamReader inputStreamReader = new InputStreamReader( inputStream );

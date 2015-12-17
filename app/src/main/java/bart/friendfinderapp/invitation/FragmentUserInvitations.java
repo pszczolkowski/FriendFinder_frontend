@@ -81,7 +81,7 @@ public class FragmentUserInvitations extends Fragment {
                 AsyncTask asyncTask = new AsyncTask() {
                     @Override
                     protected Object doInBackground( Object[] params ) {
-                        return SendInvitationController.sendRequest( username );
+                        return new SendInvitationController().sendRequest( username );
                     }
 
                     @Override

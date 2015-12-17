@@ -24,7 +24,7 @@ public class UserCredentials {
     }
 
 
-    public static UserCredentials getUserCredentials() {
+    public static UserCredentials getUserCredentials() throws UserCantBeReadException {
         if ( userCredentials == null ) {
             throw new UserCantBeReadException();
         }

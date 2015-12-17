@@ -24,10 +24,10 @@ import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
  */
 public class GetInvitationController {
 
-    private static HttpURLConnection connection;
-    private static URL url;
+    private HttpURLConnection connection;
+    private URL url;
 
-    public static int sendRequest() {
+    public int sendRequest() {
         int responseCode = 0;
         try {
             url = new URL( APP_URL + "/invitation" );
@@ -67,7 +67,7 @@ public class GetInvitationController {
         return responseCode;
     }
 
-    private static String readResponseBody() throws IOException {
+    private String readResponseBody() throws IOException {
 
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
@@ -80,7 +80,7 @@ public class GetInvitationController {
         return stringBuilder.toString();
     }
 
-    private static void logErrorMessage( int responseCode ) throws IOException {
+    private void logErrorMessage( int responseCode ) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );
@@ -93,7 +93,7 @@ public class GetInvitationController {
         Log.i( "Get invitations error", stringBuilder.toString() );
     }
 
-    private static List< Invitation > castResponseToList( JSONArray responseAsJson ) throws JSONException {
+    private List< Invitation > castResponseToList( JSONArray responseAsJson ) throws JSONException {
         List< Invitation > invitations = new ArrayList<>();
         if ( responseAsJson != null ) {
             for ( int i = 0; i < responseAsJson.length(); i++ ) {

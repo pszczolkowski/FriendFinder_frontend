@@ -52,8 +52,6 @@ import bart.friendfinderapp.mainActivity.MainActivity;
 import bart.friendfinderapp.shared.UserCredentials;
 
 import static android.Manifest.permission.READ_CONTACTS;
-import static bart.friendfinderapp.loginActivity.LoginController.tryToSignIn;
-import static bart.friendfinderapp.loginActivity.RegisterController.tryToRegister;
 import static bart.friendfinderapp.shared.Constants.LOGIN_FILE;
 import static bart.friendfinderapp.shared.UserCredentials.createUserCredentials;
 import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
@@ -166,6 +164,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             @Override
             public void onClick( View v ) {
                 remember_me = !remember_me;
+                if(!remember_me){
+
+                }
                 setElementsVisibility();
 
             }
@@ -310,6 +311,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         } catch ( IOException e ) {
             e.printStackTrace();
         } catch ( JSONException e ) {
+            e.printStackTrace();
+        } catch ( UserCantBeReadException e ) {
             e.printStackTrace();
         }
         return success;
@@ -484,7 +487,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         @Override
         protected Boolean doInBackground( Void... params ) {
 
-            responseCode = tryToSignIn( login, password );
+            responseCode = new LoginController().tryToSignIn( login, password );
 
             return true;
         }
@@ -530,7 +533,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
 
         @Override
         protected Boolean doInBackground( Void... params ) {
-            responseCode = tryToRegister( login, password );
+            responseCode = new RegisterController().tryToRegister( login, password );
             return true;
         }
 

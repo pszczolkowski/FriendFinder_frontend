@@ -4,7 +4,6 @@ import java.net.HttpURLConnection;
 
 import bart.friendfinderapp.mapActivity.MapFragment;
 
-import static bart.friendfinderapp.friends.UpdateUserFriendsPositionController.sendRequest;
 import static com.google.android.gms.internal.zzip.runOnUiThread;
 
 /**
@@ -24,7 +23,7 @@ public class UpdateUserFriendsPositionThread extends Thread {
     public void run() {
         super.run();
         while ( threadRunning ) {
-            int response = sendRequest();
+            int response = new UpdateUserFriendsPositionController().sendRequest();
             if ( response == HttpURLConnection.HTTP_OK ) {
 //                UserFriends.moveMocks();
                 runOnUiThread( new Runnable() {

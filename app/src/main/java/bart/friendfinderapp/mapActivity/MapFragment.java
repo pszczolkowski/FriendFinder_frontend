@@ -13,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -159,11 +158,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     Marker friendMarker = friendMarkers.get( friend.getId() );
                     friendMarker.setPosition( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) );
                 } else {
-                    friendMarkers.put( friend.getId(), mMap.addMarker( new MarkerOptions()
-                                    .position( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) )
-                                    .title( friend.getUsername() )
-                                    .snippet( calculateDistance( friend.getUserLocalization() ) )
-                    ) );
+                    if ( mMap != null ) {
+                        friendMarkers.put( friend.getId(), mMap.addMarker( new MarkerOptions()
+                                        .position( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) )
+                                        .title( friend.getUsername() )
+                                        .snippet( calculateDistance( friend.getUserLocalization() ) )
+                        ) );
+                    }
                 }
             } else {
                 if ( friendMarkers.containsKey( friend.getId() ) ) {
@@ -198,20 +199,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private String calculateDistance( Localization friendLocalization ) {
-        Localization userLocalization = locationListener.getUserLocalization();
-        if ( userLocalization != null ) {
-            Location userLocation = new Location( "user" );
-            userLocation.setLatitude( userLocalization.getLatitude() );
-            userLocation.setLongitude( userLocalization.getLongitude() );
-            Location friendLocation = new Location( "friend" );
-            userLocation.setLatitude( friendLocalization.getLatitude() );
-            userLocation.setLongitude( friendLocalization.getLongitude() );
+        if( locationListener != null) {
+            Localization userLocalization = locationListener.getUserLocalization();
+            if ( userLocalization != null ) {
+                Location userLocation = new Location( "user" );
+                userLocation.setLatitude( userLocalization.getLatitude() );
+                userLocation.setLongitude( userLocalization.getLongitude() );
+                Location friendLocation = new Location( "friend" );
+                userLocation.setLatitude( friendLocalization.getLatitude() );
+                userLocation.setLongitude( friendLocalization.getLongitude() );
 
-            return "Distance to friend: " + userLocation.distanceTo( friendLocation ) + "m";
-        } else {
-            return "It's not possible to calculate distance";
+                return "Distance to friend: " + userLocation.distanceTo( friendLocation ) + "m";
+            }
         }
-
+        return "It's not possible to calculate distance";
     }
 
     public void switchMapType( MapType mapType) {

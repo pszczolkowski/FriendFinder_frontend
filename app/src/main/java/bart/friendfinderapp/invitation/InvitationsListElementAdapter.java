@@ -49,7 +49,7 @@ public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
                 AsyncTask asyncTask = new AsyncTask() {
                     @Override
                     protected Object doInBackground( Object[] params ) {
-                        return AcceptInvitationController.sendRequest( invitation.getId() );
+                        return new AcceptInvitationController().sendRequest( invitation.getId() );
                     }
                     @Override
                     protected void onPostExecute( Object o ) {
@@ -80,7 +80,7 @@ public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
                 AsyncTask asyncTask = new AsyncTask() {
                     @Override
                     protected Object doInBackground( Object[] params ) {
-                        return RefuseInvitationController.sendRequest( invitation.getId() );
+                        return new RefuseInvitationController().sendRequest( invitation.getId() );
                     }
                     @Override
                     protected void onPostExecute( Object o ) {

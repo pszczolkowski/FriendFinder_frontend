@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static bart.friendfinderapp.invitation.GetInvitationController.sendRequest;
-
 /**
  * Created by Godzio on 2015-12-12.
  */
@@ -30,7 +28,7 @@ public class UserInvitations {
         Thread thread = new Thread( new Runnable() {
             @Override
             public void run() {
-                sendRequest();
+                new GetInvitationController().sendRequest();
             }
         } );
         thread.start();

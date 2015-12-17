@@ -25,10 +25,10 @@ import static bart.friendfinderapp.shared.UserCredentials.getUserCredentials;
  * Created by Godzio on 2015-11-26.
  */
 public class UpdateUserFriendsPositionController {
-    private static HttpURLConnection connection;
-    private static URL url;
+    private HttpURLConnection connection;
+    private URL url;
 
-    public static int sendRequest() {
+    public int sendRequest() {
         int responseCode = 0;
         try {
             url = new URL( APP_URL + "/user/location" );
@@ -64,7 +64,7 @@ public class UpdateUserFriendsPositionController {
         return responseCode;
     }
 
-    private static String readResponseBody() throws IOException {
+    private String readResponseBody() throws IOException {
         if ( connection != null ) {
             BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
             StringBuilder stringBuilder = new StringBuilder();
@@ -79,7 +79,7 @@ public class UpdateUserFriendsPositionController {
         return null;
     }
 
-    private static void logErrorMessage( int responseCode ) throws IOException {
+    private void logErrorMessage( int responseCode ) throws IOException {
         BufferedReader bufferedReader = new BufferedReader( new InputStreamReader( connection.getErrorStream() ) );
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append( "Error code: " ).append( responseCode ).append( " " );
@@ -92,7 +92,7 @@ public class UpdateUserFriendsPositionController {
         Log.i( "FriendsPositionUpdate", stringBuilder.toString() );
     }
 
-    private static Map< String, Localization > convertResponseToMap( JSONArray responseAsJsonArray ) throws JSONException {
+    private Map< String, Localization > convertResponseToMap( JSONArray responseAsJsonArray ) throws JSONException {
         Map< String, Localization > friendsLocalizations = new HashMap<>();
         if ( responseAsJsonArray != null ) {
             for ( int i = 0; i < responseAsJsonArray.length(); i++ ) {
