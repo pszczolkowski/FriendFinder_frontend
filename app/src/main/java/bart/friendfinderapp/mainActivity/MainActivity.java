@@ -32,7 +32,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    private Fragment fragment;
+    private Fragment mapFragment;
+    private Fragment friendsFragment;
+    private Fragment invitationsFragment;
     private FragmentManager fragmentManager;
 
     @Override
@@ -66,9 +68,8 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         fragmentManager = getSupportFragmentManager();
-        fragment = MapFragment.newInstance();
-        fragmentManager.beginTransaction().replace( R.id.main_fragment, fragment ).commit();
-
+        mapFragment = MapFragment.newInstance();
+        fragmentManager.beginTransaction().replace( R.id.main_fragment, mapFragment ).commit();
     }
 
     @Override
@@ -109,24 +110,31 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
         if ( id == R.id.nav_map ) {
-            fragment = MapFragment.newInstance();
-            fragmentManager.beginTransaction().replace( R.id.main_fragment, fragment ).commit();
+            if( mapFragment != null){
+                ((MapFragment) mapFragment ).stopThreads();
+            }
+            mapFragment = MapFragment.newInstance();
+            fragmentManager.beginTransaction().replace( R.id.main_fragment, mapFragment ).commit();
         } else if ( id == R.id.nav_invitations ) {
-            fragment = FragmentUserInvitations.newInstance();
-            fragmentManager.beginTransaction().replace( R.id.main_fragment, fragment ).commit();
+            invitationsFragment = FragmentUserInvitations.newInstance();
+            fragmentManager.beginTransaction().replace( R.id.main_fragment, invitationsFragment ).commit();
         } else if ( id == R.id.nav_friends ) {
-            fragment = FragmentUserFriends.newInstance();
-            fragmentManager.beginTransaction().replace( R.id.main_fragment, fragment ).commit();
+            friendsFragment = FragmentUserFriends.newInstance();
+            fragmentManager.beginTransaction().replace( R.id.main_fragment, friendsFragment ).commit();
         } else if ( id == R.id.nav_default_map_type ) {
-            if(fragment.getClass().equals( MapFragment.class )){
-                ((MapFragment) fragment).switchMapType( MapType.DEFAULT );
+            if( mapFragment.getClass().equals( MapFragment.class )){
+                ((MapFragment) mapFragment ).switchMapType( MapType.DEFAULT );
             }
         } else if ( id == R.id.nav_satellite_map_type ) {
-            if(fragment.getClass().equals( MapFragment.class )){
-                ((MapFragment) fragment).switchMapType( MapType.HYBRID );
+            if( mapFragment.getClass().equals( MapFragment.class )){
+                ((MapFragment) mapFragment ).switchMapType( MapType.HYBRID );
             }
         } else if( id == R.id.nav_logout){
+            if( mapFragment != null){
+                ((MapFragment) mapFragment ).stopThreads();
+            }
             UserFriends.clear();
             UserInvitations.clear();
             UserCredentials.clear();

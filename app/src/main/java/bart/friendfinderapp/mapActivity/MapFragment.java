@@ -225,4 +225,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
+    public void stopThreads() {
+        updateMyPositionThread.stopThread();
+        updateUserFriendsPositionThread.stopThread();
+    }
 }
