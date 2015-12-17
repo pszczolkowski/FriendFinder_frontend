@@ -1,4 +1,4 @@
-package bart.friendfinderapp.friends;
+package bart.friendfinderapp.invitation;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,92 +10,62 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.HttpURLConnection;
 import java.util.List;
 
 import bart.friendfinderapp.R;
-import bart.friendfinderapp.invitation.SendInvitationController;
 
-import static bart.friendfinderapp.friends.UserFriends.getUserFriends;
+import static bart.friendfinderapp.invitation.UserInvitations.getUserInvitations;
+import static bart.friendfinderapp.invitation.UserInvitations.requestUpdateOfUserInvitations;
 
-public class FragmentUserFriends extends Fragment {
+public class InvitationsFragment extends Fragment {
 
-    private ListView friendsListView;
-    private FriendListElementAdapter adapter;
+    private InvitationsListElementAdapter adapter;
+    private LinearLayout fragmentLayout;
 
-    public FragmentUserFriends() {
-    }
-
-    public static Fragment newInstance() {
-        FragmentUserFriends fragment = new FragmentUserFriends();
+    public InvitationsFragment(){}
+    
+    public static Fragment newInstance(){
+        InvitationsFragment fragment = new InvitationsFragment();
         Bundle args = new Bundle();
         fragment.setArguments( args );
         return fragment;
     }
+
     @Override
     public View onCreateView( LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        FrameLayout fragmentLayout = (FrameLayout) inflater.inflate( R.layout.fragment_user_friends, container, false );
-        refreshUserFriends();
+        fragmentLayout = (LinearLayout) inflater.inflate( R.layout.fragment_user_invitation, container, false );
 
-        List< User > userFriends = getUserFriends();
+        requestUpdateOfUserInvitations();
+        List< Invitation > invitations = getUserInvitations();
 
-        friendsListView = (ListView) fragmentLayout.findViewById( R.id.friendsListView );
-        adapter = new FriendListElementAdapter( super.getActivity(), userFriends );
-        friendsListView.setAdapter( adapter );
+        ListView invitationsListView = (ListView) fragmentLayout.findViewById( R.id.invitationListView );
+        adapter = new InvitationsListElementAdapter( super.getActivity(), this, invitations );
+        invitationsListView.setAdapter( adapter );
 
-        TextView noFriendsText = (TextView) fragmentLayout.findViewById( R.id.noFriendsTextView );
+        TextView noInvitations = (TextView) fragmentLayout.findViewById( R.id.noInvitationTextView );
 
-        if ( userFriends.size() == 0 ) {
-            noFriendsText.setVisibility( View.VISIBLE );
-            friendsListView.setVisibility( View.INVISIBLE );
+        if ( invitations.size() == 0 ) {
+            noInvitations.setVisibility( View.VISIBLE );
+            invitationsListView.setVisibility( View.INVISIBLE );
         } else {
-            friendsListView.setVisibility( View.VISIBLE );
-            noFriendsText.setVisibility( View.INVISIBLE );
+            invitationsListView.setVisibility( View.VISIBLE );
+            noInvitations.setVisibility( View.INVISIBLE );
         }
 
-        Button inviteButton = (Button) fragmentLayout.findViewById( R.id.inviteFriendButton );
+        Button inviteButton = (Button) fragmentLayout.findViewById( R.id.inviteButton );
         inviteButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
                 sendInvitation();
             }
         } );
-
-        Button refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshFriendsListButton );
-        refreshButton.setOnClickListener( new View.OnClickListener() {
-            @Override
-            public void onClick( View v ) {
-                refreshUserFriends();
-            }
-        } );
-
         return fragmentLayout;
-    }
-
-    private void refreshUserFriends() {
-        AsyncTask asyncTask = new AsyncTask() {
-            @Override
-            protected Object doInBackground( Object[] params ) {
-                return new UpdateUserFriendsController().sendRequest();
-            }
-
-            @Override
-            protected void onPostExecute( Object o ) {
-                super.onPostExecute( o );
-                int responseCode = (int) o;
-                if ( responseCode == HttpURLConnection.HTTP_OK ) {
-                    adapter.updateUserFriendsList( getUserFriends() );
-                }
-            }
-        };
-        asyncTask.execute();
     }
 
     private void sendInvitation() {

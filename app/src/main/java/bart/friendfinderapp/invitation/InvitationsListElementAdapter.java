@@ -24,9 +24,9 @@ import static bart.friendfinderapp.invitation.UserInvitations.getUserInvitations
 public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
     private final Context context;
     private List< Invitation > invitations;
-    private final FragmentUserInvitations invitationFragment;
+    private final InvitationsFragment invitationFragment;
 
-    public InvitationsListElementAdapter( Context context, FragmentUserInvitations invitationFragment, List< Invitation > invitations ) {
+    public InvitationsListElementAdapter( Context context, InvitationsFragment invitationFragment, List< Invitation > invitations ) {
         super( context, R.layout.single_invitation_element, invitations );
         this.context = context;
         this.invitations = invitations;

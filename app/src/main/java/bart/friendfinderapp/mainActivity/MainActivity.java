@@ -17,9 +17,9 @@ import android.widget.TextView;
 
 import bart.friendfinderapp.R;
 import bart.friendfinderapp.exceptions.UserCantBeReadException;
-import bart.friendfinderapp.friends.FragmentUserFriends;
+import bart.friendfinderapp.friends.FriendsFragment;
 import bart.friendfinderapp.friends.UserFriends;
-import bart.friendfinderapp.invitation.FragmentUserInvitations;
+import bart.friendfinderapp.invitation.InvitationsFragment;
 import bart.friendfinderapp.invitation.UserInvitations;
 import bart.friendfinderapp.loginActivity.LoginActivity;
 import bart.friendfinderapp.mapActivity.MapFragment;
@@ -118,10 +118,10 @@ public class MainActivity extends AppCompatActivity
             mapFragment = MapFragment.newInstance();
             fragmentManager.beginTransaction().replace( R.id.main_fragment, mapFragment ).commit();
         } else if ( id == R.id.nav_invitations ) {
-            invitationsFragment = FragmentUserInvitations.newInstance();
+            invitationsFragment = InvitationsFragment.newInstance();
             fragmentManager.beginTransaction().replace( R.id.main_fragment, invitationsFragment ).commit();
         } else if ( id == R.id.nav_friends ) {
-            friendsFragment = FragmentUserFriends.newInstance();
+            friendsFragment = FriendsFragment.newInstance();
             fragmentManager.beginTransaction().replace( R.id.main_fragment, friendsFragment ).commit();
         } else if ( id == R.id.nav_default_map_type ) {
             if( mapFragment.getClass().equals( MapFragment.class )){
