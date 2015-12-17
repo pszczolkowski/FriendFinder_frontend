@@ -15,12 +15,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.net.HttpURLConnection;
 import java.util.List;
 
 import bart.friendfinderapp.R;
 
 import static bart.friendfinderapp.invitation.UserInvitations.getUserInvitations;
-import static bart.friendfinderapp.invitation.UserInvitations.requestUpdateOfUserInvitations;
 
 public class InvitationsFragment extends Fragment {
 
@@ -41,7 +41,7 @@ public class InvitationsFragment extends Fragment {
                               Bundle savedInstanceState ) {
         fragmentLayout = (LinearLayout) inflater.inflate( R.layout.fragment_user_invitation, container, false );
 
-        requestUpdateOfUserInvitations();
+        refreshInvitationList();
         List< Invitation > invitations = getUserInvitations();
 
         ListView invitationsListView = (ListView) fragmentLayout.findViewById( R.id.invitationListView );
@@ -65,7 +65,36 @@ public class InvitationsFragment extends Fragment {
                 sendInvitation();
             }
         } );
+
+        Button refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshInvitationListButton);
+        refreshButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick( View v ) {
+                refreshInvitationList();
+            }
+        } );
+
         return fragmentLayout;
+    }
+
+    private void refreshInvitationList() {
+        AsyncTask asyncTask = new AsyncTask() {
+            @Override
+            protected Object doInBackground( Object[] params ) {
+                return new GetInvitationController().sendRequest();
+            }
+
+            @Override
+            protected void onPostExecute( Object o ) {
+                super.onPostExecute( o );
+                int responseCode = (int) o;
+                if ( responseCode == HttpURLConnection.HTTP_OK ) {
+                    adapter.updateList();
+                    createShortToast( "Refreshed" );
+                }
+            }
+        };
+        asyncTask.execute();
     }
 
     private void sendInvitation() {

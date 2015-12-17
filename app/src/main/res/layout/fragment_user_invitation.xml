@@ -39,11 +39,28 @@
             android:textAppearance="?android:attr/textAppearanceLarge"/>
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/inviteButton"
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
-        android:text="@string/invite"/>
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/inviteButton"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:drawableLeft="@android:drawable/ic_dialog_email"
+            android:text="@string/invite"/>
+
+        <Button
+            android:id="@+id/refreshInvitationListButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:drawableLeft="@android:drawable/ic_popup_sync"
+            android:text="@string/refresh"/>
+
+    </LinearLayout>
 
 </LinearLayout>

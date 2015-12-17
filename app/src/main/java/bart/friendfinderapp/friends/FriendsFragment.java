@@ -92,6 +92,7 @@ public class FriendsFragment extends Fragment {
                 int responseCode = (int) o;
                 if ( responseCode == HttpURLConnection.HTTP_OK ) {
                     adapter.updateUserFriendsList( getUserFriends() );
+                    createShortToast( "Refreshed" );
                 }
             }
         };
