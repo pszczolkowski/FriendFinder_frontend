@@ -11,6 +11,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".invitation.FragmentUserInvitations">
 
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+
+    </TableRow>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dip"
