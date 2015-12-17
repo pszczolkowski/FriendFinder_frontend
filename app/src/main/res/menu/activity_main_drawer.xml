@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_map"
+            android:icon="@drawable/world_icon"
+            android:title="@string/map"/>
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/friends_icon"
+            android:title="@string/my_friends"/>
+
+        <item
+            android:id="@+id/nav_invitations"
+            android:icon="@android:drawable/ic_dialog_email"
+            android:title="@string/my_invitations"/>
+    </group>
+    <item android:title="@string/map_type">
+        <menu>
+            <item
+                android:id="@+id/nav_default_map_type"
+                android:icon="@drawable/map_icon"
+                android:title="@string/normal_map"/>
+            <item
+                android:id="@+id/nav_satellite_map_type"
+                android:icon="@drawable/satelite_icon"
+                android:title= "@string/satellite"/>
+
+        </menu>
+    </item>
+</menu>

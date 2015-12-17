@@ -48,7 +48,7 @@ import bart.friendfinderapp.R;
 import bart.friendfinderapp.exceptions.UserCantBeReadException;
 import bart.friendfinderapp.friends.UserFriends;
 import bart.friendfinderapp.invitation.UserInvitations;
-import bart.friendfinderapp.mapActivity.MapsActivity;
+import bart.friendfinderapp.mainActivity.MainActivity;
 import bart.friendfinderapp.shared.UserCredentials;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -216,9 +216,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         }
     }
 
-    private void moveToMapActivity() {
+    private void moveToMainActivity() {
         saveDataToFile();
-        Intent i = new Intent( LoginActivity.this, MapsActivity.class );
+        Intent i = new Intent( LoginActivity.this, MainActivity.class );
         startActivity( i );
         UserFriends.requestUpdateOfUserFriends();
         UserInvitations.requestUpdateOfUserInvitations();
@@ -423,7 +423,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
         }
 
         if ( remember_me && userCredentials != null ) {
-            moveToMapActivity();
+            moveToMainActivity();
             return;
         }
 
@@ -495,7 +495,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks< Cursor >
             showProgress( false );
 
             if ( responseCode == HttpURLConnection.HTTP_OK ) {
-                moveToMapActivity();
+                moveToMainActivity();
             } else if ( responseCode == HttpURLConnection.HTTP_BAD_REQUEST ) {
                 loginView.setError( getString( R.string.error_invalid_login ) );
                 loginPasswordView.setError( getString( R.string.error_incorrect_password ) );

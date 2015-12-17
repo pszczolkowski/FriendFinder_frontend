@@ -24,4 +24,16 @@
     <string name="ACCEPT_INVITATION">Accept</string>
     <string name="NO_INVITATIONS_FOUND">You don\'t have any invitations</string>
     <string name="invite">Invite</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="my_friends">My Friends</string>
+    <string name="my_invitations">My Invitation</string>
+    <string name="map">Map</string>
+    <string name="friend_finder">Friend Finder</string>
+    <string name="satellite">Satellite Map</string>
+    <string name="map_type">Change map type</string>
+    <string name="normal_map">Normal Map</string>
 </resources>
