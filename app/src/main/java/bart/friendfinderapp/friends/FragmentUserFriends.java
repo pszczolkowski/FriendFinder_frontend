@@ -1,13 +1,16 @@
 package bart.friendfinderapp.friends;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,24 +23,34 @@ import bart.friendfinderapp.invitation.SendInvitationController;
 
 import static bart.friendfinderapp.friends.UserFriends.getUserFriends;
 
-public class UserFriendsActivity extends Activity {
+public class FragmentUserFriends extends Fragment {
 
     private ListView friendsListView;
     private FriendListElementAdapter adapter;
 
+    public FragmentUserFriends() {
+    }
+
+    public static Fragment newInstance() {
+        FragmentUserFriends fragment = new FragmentUserFriends();
+        Bundle args = new Bundle();
+        fragment.setArguments( args );
+        return fragment;
+    }
     @Override
-    protected void onCreate( Bundle savedInstanceState ) {
+    public View onCreateView( LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_user_friends );
+        FrameLayout fragmentLayout = (FrameLayout) inflater.inflate( R.layout.fragment_user_friends, container, false );
         refreshUserFriends();
 
         List< User > userFriends = getUserFriends();
 
-        friendsListView = (ListView) findViewById( R.id.friendsListView );
-        adapter = new FriendListElementAdapter( this, userFriends );
+        friendsListView = (ListView) fragmentLayout.findViewById( R.id.friendsListView );
+        adapter = new FriendListElementAdapter( super.getActivity(), userFriends );
         friendsListView.setAdapter( adapter );
 
-        TextView noFriendsText = (TextView) findViewById( R.id.noFriendsTextView );
+        TextView noFriendsText = (TextView) fragmentLayout.findViewById( R.id.noFriendsTextView );
 
         if ( userFriends.size() == 0 ) {
             noFriendsText.setVisibility( View.VISIBLE );
@@ -47,7 +60,7 @@ public class UserFriendsActivity extends Activity {
             noFriendsText.setVisibility( View.INVISIBLE );
         }
 
-        Button inviteButton = (Button) findViewById( R.id.inviteFriendButton );
+        Button inviteButton = (Button) fragmentLayout.findViewById( R.id.inviteFriendButton );
         inviteButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -55,7 +68,7 @@ public class UserFriendsActivity extends Activity {
             }
         } );
 
-        Button refreshButton = (Button) findViewById( R.id.refreshFriendsListButton );
+        Button refreshButton = (Button) fragmentLayout.findViewById( R.id.refreshFriendsListButton );
         refreshButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick( View v ) {
@@ -63,7 +76,7 @@ public class UserFriendsActivity extends Activity {
             }
         } );
 
-
+        return fragmentLayout;
     }
 
     private void refreshUserFriends() {
@@ -86,9 +99,9 @@ public class UserFriendsActivity extends Activity {
     }
 
     private void sendInvitation() {
-        final AlertDialog.Builder alert = new AlertDialog.Builder( this );
+        final AlertDialog.Builder alert = new AlertDialog.Builder( super.getActivity() );
         alert.setTitle( "Invite friend" );
-        final EditText usernameInput = new EditText( this );
+        final EditText usernameInput = new EditText( super.getActivity() );
         alert.setView( usernameInput );
 
         alert.setPositiveButton( "Send", new DialogInterface.OnClickListener() {
@@ -123,6 +136,6 @@ public class UserFriendsActivity extends Activity {
     }
 
     private void createShortToast( String message ) {
-        Toast.makeText( this, message, Toast.LENGTH_SHORT ).show();
+        Toast.makeText( super.getActivity(), message, Toast.LENGTH_SHORT ).show();
     }
 }
