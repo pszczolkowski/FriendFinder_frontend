@@ -148,6 +148,8 @@ public class FriendsFragment extends Fragment {
     }
 
     private void createShortToast( String message ) {
-        Toast.makeText( super.getActivity(), message, Toast.LENGTH_SHORT ).show();
+        if(super.getActivity() != null) {
+            Toast.makeText( super.getActivity(), message, Toast.LENGTH_SHORT ).show();
+        }
     }
 }
