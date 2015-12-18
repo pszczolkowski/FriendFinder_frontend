@@ -157,12 +157,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if ( friendMarkers.containsKey( friend.getId() ) ) {
                     Marker friendMarker = friendMarkers.get( friend.getId() );
                     friendMarker.setPosition( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) );
+//                    friendMarker.setSnippet( calculateDistance( friend.getUserLocalization() ));
                 } else {
                     if ( mMap != null ) {
                         friendMarkers.put( friend.getId(), mMap.addMarker( new MarkerOptions()
                                         .position( new LatLng( friend.getUserLocalization().getLongitude(), friend.getUserLocalization().getLatitude() ) )
                                         .title( friend.getUsername() )
-                                        .snippet( calculateDistance( friend.getUserLocalization() ) )
+//                                        .snippet( calculateDistance( friend.getUserLocalization() ) )
                         ) );
                     }
                 }
