@@ -108,7 +108,8 @@ public class InvitationsListElementAdapter extends ArrayAdapter< Invitation > {
     }
 
     public void updateList(){
-        invitations = getUserInvitations();
+        this.clear();
+        this.addAll( getUserInvitations() );
         notifyDataSetChanged();
     }
 

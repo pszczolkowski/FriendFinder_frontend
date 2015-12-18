@@ -26,6 +26,8 @@ public class FriendListElementAdapter extends ArrayAdapter< User > {
         this.friends = friends;
     }
     public void updateUserFriendsList ( List<User> friends){
+        this.clear();
+        this.addAll( friends );
         this.friends = friends;
         this.notifyDataSetChanged();
     }
